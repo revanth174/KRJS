@@ -15,7 +15,7 @@
    <context:component-scan base-package="com.reddy.krjs.controllers"></context:component-scan>
    
    
-   
+    
    <bean id="viewResolver"
    		 class="org.springframework.web.servlet.view.InternalResourceViewResolver">
    		 
@@ -24,7 +24,22 @@
    </bean>
    
    
-   <mvc:annotation-driven></mvc:annotation-driven>
    
-   <mvc:resources location="/assets/" mapping="/resources/**" cache-period="31556926"></mvc:resources>
+   
+   
+
+
+	<mvc:annotation-driven></mvc:annotation-driven>
+
+	<mvc:resources mapping="/resources/**" location="/assets/"
+		cache-period="31556926" />
+
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+
+		<!-- setting maximum upload size -->
+		<property name="maxUploadSize" value="100000000" />
+
+	</bean>
+   
 </beans>
