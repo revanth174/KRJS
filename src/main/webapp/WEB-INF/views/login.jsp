@@ -30,7 +30,7 @@
 <body>
 
 
-	<div class="wrapper">
+	<%-- <div class="wrapper">
 
 		<!-- Navigation -->
 		<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -41,7 +41,7 @@
 						Shopping</a>
 				</div>
 			</div>
-		</nav>
+		</nav> --%>
 
 		<!-- Page Content -->
 
@@ -91,7 +91,7 @@
 										<label for="username" class="col-md-4 control-label">ID:
 										</label>
 										<div class="col-md-8">
-											<input type="text" name="username" id="username"
+											<input type="text" name="name" id="username"
 												class="form-control" />
 										</div>
 									</div>

@@ -11,9 +11,12 @@
 <title>Sticky Footer Template for Bootstrap</title>
 
 <!-- Bootstrap core CSS -->
-<link
-	href="//netdna.bootstrapcdn.com/bootstrap/3.0.1/css/bootstrap.min.css"
-	rel="stylesheet">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
 <!-- Custom styles for this template -->
 <style type="text/css">
@@ -125,6 +128,63 @@ html, body {
 			<div class="page-header">
 				<h1>Sticky footer</h1>
 			</div>
+			<p class="lead">Pin a fixed-height footer to the bottom of the
+				viewport in desktop browsers with this custom HTML and CSS.</p>
+			<p>
+			<p class="lead">Pin a fixed-height footer to the bottom of the
+				viewport in desktop browsers with this custom HTML and CSS.</p>
+			<p>
+			<p class="lead">Pin a fixed-height footer to the bottom of the
+				viewport in desktop browsers with this custom HTML and CSS.</p>
+			<p>
+			<p class="lead">Pin a fixed-height footer to the bottom of the
+				viewport in desktop browsers with this custom HTML and CSS.</p>
+			<p>
+			<p class="lead">Pin a fixed-height footer to the bottom of the
+				viewport in desktop browsers with this custom HTML and CSS.</p>
+			<p>
+			<p class="lead">Pin a fixed-height footer to the bottom of the
+				viewport in desktop browsers with this custom HTML and CSS.</p>
+			<p>
+			<p class="lead">Pin a fixed-height footer to the bottom of the
+				viewport in desktop browsers with this custom HTML and CSS.</p>
+			<p>
+			<p class="lead">Pin a fixed-height footer to the bottom of the
+				viewport in desktop browsers with this custom HTML and CSS.</p>
+			<p>
+			<p class="lead">Pin a fixed-height footer to the bottom of the
+				viewport in desktop browsers with this custom HTML and CSS.</p>
+			<p>
+			<p class="lead">Pin a fixed-height footer to the bottom of the
+				viewport in desktop browsers with this custom HTML and CSS.</p>
+			<p>
+			<p class="lead">Pin a fixed-height footer to the bottom of the
+				viewport in desktop browsers with this custom HTML and CSS.</p>
+			<p>
+			<p class="lead">Pin a fixed-height footer to the bottom of the
+				viewport in desktop browsers with this custom HTML and CSS.</p>
+			<p>
+			<p class="lead">Pin a fixed-height footer to the bottom of the
+				viewport in desktop browsers with this custom HTML and CSS.</p>
+			<p>
+			<p class="lead">Pin a fixed-height footer to the bottom of the
+				viewport in desktop browsers with this custom HTML and CSS.</p>
+			<p>
+			<p class="lead">Pin a fixed-height footer to the bottom of the
+				viewport in desktop browsers with this custom HTML and CSS.</p>
+			<p>
+			<p class="lead">Pin a fixed-height footer to the bottom of the
+				viewport in desktop browsers with this custom HTML and CSS.</p>
+			<p>
+			<p class="lead">Pin a fixed-height footer to the bottom of the
+				viewport in desktop browsers with this custom HTML and CSS.</p>
+			<p>
+			<p class="lead">Pin a fixed-height footer to the bottom of the
+				viewport in desktop browsers with this custom HTML and CSS.</p>
+			<p>
+			<p class="lead">Pin a fixed-height footer to the bottom of the
+				viewport in desktop browsers with this custom HTML and CSS.</p>
+			<p>
 			<p class="lead">Pin a fixed-height footer to the bottom of the
 				viewport in desktop browsers with this custom HTML and CSS.</p>
 			<p>

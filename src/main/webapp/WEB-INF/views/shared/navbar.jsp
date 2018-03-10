@@ -12,6 +12,8 @@
        
         <li><a class="btn" href="${contextRoot }/show/all/members">view Members</a></li>
         <li><a class="btn" href="${contextRoot }/show/pending/all/members">Pending members</a></li>
+        <li><a class="btn" href="${contextRoot }/report/">Report Generation</a></li>
+        <li><a class="btn" href="${contextRoot }/show/deleted/all/members">Deleted Members</a></li>
 		
     </ul>
     <ul class="nav navbar-nav navbar-right">
@@ -20,10 +22,10 @@
       </c:if>
        <c:if test="${pageContext.request.userPrincipal.name!=null }">
        			<li><a href="#"><span class="glyphicon glyphicon-log-in"></span> welcome  ${pageContext.request.userPrincipal.name} </a></li>
-       			 <li><a href="<c:url value="/j_spring_security_logout"></c:url>"><span class="glyphicon glyphicon-user"></span> logout</a></li>
+       			 <li><a href="<c:url value="/logout"></c:url>"><span class="glyphicon glyphicon-user"></span> logout</a></li>
        </c:if>
        <c:if test="${pageContext.request.userPrincipal.name==null }">
-       			<li><a href="<c:url value="/logout"></c:url>" ><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+       			<li><a href="<c:url value="/login"></c:url>" ><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
        </c:if>
       
       

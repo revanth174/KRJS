@@ -37,7 +37,7 @@ public class FormController {
 		d.setMember(member);
 		payment.setFeePaid(BigDecimal.valueOf(1000.0));
 		String ref = "ref" + Integer.toString(new Random().nextInt(10000));
-		payment.setRefNo("ref134");
+		payment.setRefNo(ref);
 		payment.setMop("online");
 		payment.setApplicationDate(new Date());
 		member.setPayment(payment);

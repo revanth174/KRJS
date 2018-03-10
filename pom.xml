@@ -12,12 +12,27 @@
 		<javaee.version>7.0</javaee.version>
 		<spring.version>5.0.0.RELEASE</spring.version>
 		<spring.security.version>5.0.0.RELEASE</spring.security.version>
-		<maven.compiler.source>1.7</maven.compiler.source>
-		<maven.compiler.target>1.7</maven.compiler.target>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
 	</properties>
 
 	<dependencies>
 
+
+		<dependency>
+			<groupId>com.itextpdf</groupId>
+			<artifactId>itextpdf</artifactId>
+			<version>5.4.1</version>
+		</dependency>
+		
+		
+		<!-- https://mvnrepository.com/artifact/javax.mail/mail -->
+		<dependency>
+		    <groupId>javax.mail</groupId>
+		    <artifactId>mail</artifactId>
+		    <version>1.4</version>
+		</dependency>
+		
 
 
 		<!-- JAVAEE -->
@@ -80,5 +95,16 @@
 	</dependencies>
 	<build>
 		<finalName>krjs</finalName>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<!-- <configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+					
+				</configuration> -->
+			</plugin>
+		</plugins>
 	</build>
 </project>

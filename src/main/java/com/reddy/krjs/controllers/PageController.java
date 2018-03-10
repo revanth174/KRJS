@@ -24,46 +24,47 @@ import com.reddy.krjs.supportEnd.Model.Users;
 import com.reddy.krjs.supportEnd.dao.MemberDao;
 import com.reddy.krjs.supportEnd.service.MemberService;
 
+import extra.BulkSms;
+import extra.Email;
 
 @Controller
 public class PageController {
-	
+
 	@Autowired
 	MemberDao memberdao;
-	
+
 	@Autowired
 	MemberService service;
-	
+
 	@Autowired
 	BCryptPasswordEncoder passwordEncoder;
-	
-	@RequestMapping(value= {"/","home","index"})
+
+	@RequestMapping(value = { "/", "home", "index" })
 	public ModelAndView index() {
 		System.out.println("welcome to pagecontroller->index()");
 		ModelAndView mv = new ModelAndView("page");
-		mv.addObject("title","home");
+		mv.addObject("title", "home");
 		return mv;
 	}
-	
+
 	@RequestMapping("/about")
 	public ModelAndView aboutUs() {
 		System.out.println("welcome to pagecontroller->aboutus()");
 		ModelAndView mv = new ModelAndView("page");
-		mv.addObject("title","About Us");
-		mv.addObject("userclickabout",true);
+		mv.addObject("title", "About Us");
+		mv.addObject("userclickabout", true);
 		return mv;
 	}
-	
-	
+
 	@RequestMapping("/contact")
 	public ModelAndView contactUs() {
 		System.out.println("welcome to pagecontroller->aboutus()");
 		ModelAndView mv = new ModelAndView("page");
-		mv.addObject("title","Contact Us");
-		mv.addObject("userclickcontact",true);
+		mv.addObject("title", "Contact Us");
+		mv.addObject("userclickcontact", true);
 		return mv;
 	}
-	
+
 	@RequestMapping("/form")
 	public ModelAndView form() {
 		System.out.println("welcome to pagecontroller->form()");
@@ -105,8 +106,8 @@ public class PageController {
 				mv.addObject("memberobject", li);
 
 			} else if (category.equals("phone")) {
-				
-				List<Member> li = service.getByMobileNumber(Long.parseLong(catvalue));				
+
+				List<Member> li = service.getByMobileNumber(Long.parseLong(catvalue));
 				mv.addObject("memberobject", li);
 
 			} else if (category.equals("district")) {
@@ -129,17 +130,33 @@ public class PageController {
 		ModelAndView mv = new ModelAndView("page");
 		mv.addObject("title", "pendingMembers");
 		mv.addObject("userclickpendingmembers", true);
-		List<MemberDup> li = service.selectAll_registeredMembers();
-		if(!li.isEmpty())
-		for (MemberDup m : li) {
-			System.out.println(m.getMemberId());
-		}
+		List<MemberDup> li = service.selectAll_registeredMembers(false);
+		if (!li.isEmpty())
+			for (MemberDup m : li) {
+				System.out.println(m.getMemberId());
+			}
+		mv.addObject("memberobject", li);
+		return mv;
+	}
+	
+	
+	@RequestMapping(value = "/show/deleted/all/members")
+	public ModelAndView deletedMember() {
+		ModelAndView mv = new ModelAndView("page");
+		mv.addObject("title", "deletedMembers");
+		mv.addObject("userclickdeletedmembers", true);
+		List<MemberDup> li = service.selectAll_registeredMembers(true);
+		if (!li.isEmpty())
+			for (MemberDup m : li) {
+				System.out.println(m.getMemberId());
+			}
 		mv.addObject("memberobject", li);
 		return mv;
 	}
 
 	@RequestMapping(value = "/show/pending/members/{id}/{mid}")
-	ModelAndView memberManipuate(@PathVariable("id") String key, @PathVariable("mid") String memberid,@RequestParam(value = "uname", required = false) String remarks) {
+	ModelAndView memberManipuate(@PathVariable("id") String key, @PathVariable("mid") String memberid,
+			@RequestParam(value = "remarks", required = false) String remarks) throws Exception {
 		System.out.println("memberManipulate");
 		System.out.println(remarks);
 		System.out.println(key + "   " + memberid);
@@ -157,26 +174,48 @@ public class PageController {
 			Users u = new Users();
 			u.setMemberId(member.getMemberId());
 			u.setEnable(true);
+			u.setRole("ROLE_USER");
 			Random r = new Random();
 			int password = r.nextInt(4);
+			
 			u.setPassword(passwordEncoder.encode(Integer.toString(password)));
-			service.insertAndDelete(member);
+			
+			try {
+				service.insertAndDelete(member);
+				service.insert(u);
+				} catch(Exception e) {
+					e.printStackTrace();
+				}
+			
+			Thread d = new Thread(() -> new Email().sendMain(member.getDetails().getGmail()));
+			d.start();
+			// new Email().sendMain(member.getDetails().getGmail());
+			new Thread(() -> {
+				try {
+					new BulkSms().send(Long.toString(member.getDetails().getPhone()));
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}).start();
+			;
+
 		}
 		return mv;
 
 	}
-	
+
 	@RequestMapping("/login")
-	public ModelAndView login(@RequestParam(name="logout", required = false) String logout) {
+	public ModelAndView login(@RequestParam(name = "logout", required = false) String logout) {
 		System.out.println("welcome to pagecontroller->login()");
 		ModelAndView mv = new ModelAndView("login");
 		mv.addObject("title", "login");
-		if(logout!=null) {
+		if (logout != null) {
 			mv.addObject("logout", "User has successfully logged out!");
 		}
 		return mv;
 	}
-	
+
 	@RequestMapping("/access-denied")
 	public ModelAndView denied() {
 		System.out.println("welcome to pagecontroller->denied()");
@@ -184,24 +223,30 @@ public class PageController {
 		mv.addObject("title", "error");
 		mv.addObject("errorTitle", "caught you");
 		mv.addObject("errorDescription", "you are authorized to vieww");
-		
+
 		return mv;
 	}
-	
+
 	@RequestMapping(value = "/logout")
 	public String logout(HttpServletRequest request, HttpServletResponse response) {
-		
+
 		// first we are going to fetch the authentication
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		
-		if(auth!=null) {
+
+		if (auth != null) {
 			new SecurityContextLogoutHandler().logout(request, response, auth);
 		}
-		
-		
-				
+
 		return "redirect:/login?logout";
 	}
 	
+	@RequestMapping("/hello")
+	public ModelAndView hello() {
+		System.out.println("welcome to pagecontroller->login()");
+		ModelAndView mv = new ModelAndView("hello");
+		mv.addObject("title", "login");
+		
+		return mv;
+	}
 
 }

@@ -21,33 +21,76 @@
 </table> --%>
 
 <div class="container">
-<table class="table table-hover">
-	<thead>
-		<tr>
-			<th>photo</th>
-			<th>memberId</th>
-			<th>application Number</th>
-			<th>name</th>
-			<th>father's name</th>
-			<th>state</th>
-			<th>Proposer memberid</th>
-			<th>status</th>
-		</tr>
-	</thead>
-	<tbody>
-		<c:forEach var="mem" items="${memberobject }">
-		<tr>
-			<td><img src="<c:url value="/resources/images/${mem.getMemberId()}.jpg" />" alt="no image" height="100" width="100" class="img-thumbnail"></td>
-			<td>${mem.getMemberId()}</td>
-			<td>${mem.getAppNo()}</td>
-			<td>${mem.getName()}</td>
-			<td>${mem.getFname()}</td>
-			<td>${mem.getAddress().getState()}</td>
-			<td><a href=#>${mem.getPayment().getProposerMemberId() }</a></td>
-			
-			<td><a	onclick="document.getElementById('id01').style.display='block'"
-						style="width: auto;">delete</a>/<a href="${contextRoot }/show/pending/members/approve/${mem.getMemberId()}">approve</a>
-			<div id="id01" class="modal">
+	<table class="table table-hover">
+		<thead>
+			<tr>
+				<th>photo</th>
+				<th>memberId</th>
+				<th>application Number</th>
+				<th>name</th>
+				<th>father's name</th>
+				<th>state</th>
+				<th>Proposer memberid</th>
+				<th>status</th>
+			</tr>
+		</thead>
+		<tbody>
+			<c:forEach var="mem" items="${memberobject }">
+				<tr>
+					<td><img
+						src="<c:url value="/resources/images/${mem.getMemberId()}.jpg" />"
+						alt="no image" height="100" width="100" class="img-thumbnail"></td>
+					<td>${mem.getMemberId()}</td>
+					<td>${mem.getAppNo()}</td>
+					<td>${mem.getName()}</td>
+					<td>${mem.getFname()}</td>
+					<td>${mem.getAddress().getState()}</td>
+					<td><a href=#>${mem.getPayment().getProposerMemberId() }</a></td>
+
+					<td><button type="button" data-toggle="modal"
+							data-target="#myModal">delete</button>/ <a
+						href="${contextRoot }/show/pending/members/approve/${mem.getMemberId()}">approve</a>
+						<div class="modal fade" id="myModal">
+							<div class="modal-dialog">
+
+								<!-- Modal content-->
+								<div class="modal-content">
+									<div class="modal-header">
+										<button type="button" class="close" data-dismiss="modal">&times;</button>
+										<h4 class="modal-title">Modal Header</h4>
+									</div>
+									<form action="${contextRoot }/show/pending/members/delete/${mem.getMemberId()}">
+									<div class="modal-body">
+
+										
+											<div class="form-group">
+
+												<textarea class="form-control"
+													id="exampleFormControlTextarea1" name="remarks" rows="3"></textarea>
+											</div>
+										
+									</div>
+									<div class="modal-footer">
+										<%-- <button type="button" class="btn btn-default" onclick="${contextRoot }/show/pending/members/delete/${mem.getMemberId()}"
+											data-dismiss="modal">Close</button> --%>
+											<input type="submit" class="form-control" value="click" />
+									</div>
+									</form>
+								</div>
+
+							</div>
+						</div></td>
+
+
+				</tr>
+			</c:forEach>
+		</tbody>
+	</table>
+
+</div>
+
+
+<%-- <div id="id01" class="modal">
 
 				<form class="modal-content animate" action="${contextRoot }/show/pending/members/delete/${mem.getMemberId()}">
 	
@@ -61,15 +104,4 @@
     				
 				
 				</form>
-			</div>
-		
-	</td>
-	
-			
-		</tr>
-	</c:forEach>
-	</tbody>
-</table>
-
-</div>
-
+			</div> --%>

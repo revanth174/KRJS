@@ -12,7 +12,7 @@
    ">
    
    
-   <context:component-scan base-package="com.reddy.krjs.controllers"></context:component-scan>
+   <context:component-scan base-package="com.reddy.krjs"></context:component-scan>
    
    
     
