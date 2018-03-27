@@ -30,6 +30,12 @@ public class BulkSms {
 			
 			
 		}*/
+	
+	
+	public static void main(String args[]) throws Exception {
+		BulkSms s = new BulkSms();
+		s.send("aparna", "9686885080");
+	}
 
 	/*	
     1	Create a URL. 
@@ -40,14 +46,14 @@ public class BulkSms {
 	6	Write to the output stream. 
 	7	Close the output stream.
 	*/
-	public void send(String memid) throws Exception{
+	public void send(String memid,String phone) throws Exception{
 		String postData="";
 		String retval = "";
 
 		//give all Parameters In String 
 		String User ="T2017081401";
 		String passwd = "th6RLkgr";
-		String mobilenumber = "9738871388"; 
+		String mobilenumber = phone; 
 		String msg="your ward"+memid+"is absent for 5th hour on 21.08.207";
 		String sid = "VEMANA";
 		String mtype = "N";

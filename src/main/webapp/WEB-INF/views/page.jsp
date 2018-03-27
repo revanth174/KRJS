@@ -13,14 +13,126 @@
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<link rel="stylesheet"  href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+<script type="text/javascript" src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<!-- <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.17.0/jquery.validate.min.js"></script> -->
+
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.min.js"></script>
 <link href="<c:url value="/resources/css/footer.css" />"
 	rel="stylesheet">
 
 <script src="<c:url value="/resources/js/country.js" />"></script>
-<script src="<c:url value="/resources/js/imageupload.js" />"></script>
+
 
 <link href="<c:url value="/resources/css/homepage.css" />"
 	rel="stylesheet">
+	<!-- <script type='text/javascript' src='/resources/js/jquery.min.js'></script> -->
+<script type="text/javascript">
+$(document).ready(function() {
+	
+	  
+	  $.validator.setDefaults( {
+		errorClass : "help-block",
+		highlight : function(element) {
+			$(element)
+				.closest('.form-group')
+				.addClass("has-error")
+				.closest("label")
+				.addClass("has-error")
+		},
+		unhighlight :  function(element) {
+			$(element)
+				.closest('.form-group')
+				.removeClass("has-error")
+				.closest("label")
+				.removeClass("has-error")
+		}
+	});
+	$.validator.addMethod("length",function(value,element) {
+		return  /^[a-zA-Z ]*$/.test(value);
+	},'length must be allest 10 and it should onlu contains alphabets')
+
+	$.validator.addMethod("startwith",function(value,element) {
+		return /^[6789]/.test(value);
+	},'phone number must begins with either 6,7,8 or 9')
+	
+	$('#datatable').DataTable();
+	
+	$("#register-form").validate({
+		rules: {
+			"details.gmail" : {
+				required : true,
+				email : true,
+				//remote : "http://localhost:8080/"
+			},
+			name : {
+				required : true,
+				length : true
+			},
+			terms : {
+				required : true,
+				
+			},
+			fname : {
+				required : true,
+				length : true
+			},
+			dob : "required",
+			"details.phone" : {
+				required : true
+			},
+			"details.phone" : {
+				digits : true,
+				maxlength : 10,
+				minlength : 10,
+				required : true,
+				startwith : true
+				
+			},
+			gender : "required",
+			"details.qualification"  : "required",
+			"details.occupation"  : "required",
+			"details.vemanaVani"  : "required",
+			"details.maritalStatus" : "required",
+			"address.address" : "required",
+			"address.taluk" :  "required",
+			"address.city"  : "required",
+			"details.ward": "required",
+			"details.wardNo": "required",
+			"ProposerMemberId" : {
+				required : true,
+				remote    : {
+					url : '<c:url value="/member" />',
+					method : 'post',
+					data : {
+						name : function () {
+							return $("#pmid").val();
+						}
+						
+					}
+				}
+			}
+			
+
+		},
+		messages : {
+			"details.gmail" : {
+				required : "email is mandatory",
+				email : "enter proper email like 123@gmail.com"
+			},
+			"ProposerMemberId" : {
+				remote : 'member doesnot exist'
+			}
+			
+		
+
+
+		}
+	});   
+});
+
+</script> 
+	
 
 <%-- <link href="<c:url value="/resources/css/remarks.css" />"
 	rel="stylesheet"> --%>
@@ -33,10 +145,11 @@
 	margin: 0 auto -60px;
 	/* Pad bottom by footer height */
 	padding: 0 0 60px;
-}
+} 
 
 html, body {
 	height: 100%;
+	
 	/* The html and body elements cannot have any padding or margin. */
 }
 .container {
@@ -44,6 +157,16 @@ html, body {
 	max-width: 1200px;
 	padding: 0 15px;
 }
+/* body{ background:url(../images/bg-top.jpg) no-repeat;
+background-repeat: no-repeat;
+background-position: center center;
+ background-attachment: fixed;
+ margin: 0;
+ padding: 0px;
+ font-family:'Roboto Condensed',sans-serif;
+ 
+ } */
+
 
 .container .credit {
 	margin: 20px 0;
@@ -56,7 +179,7 @@ html, body {
 
 <title>krjs-${title }</title>
 </head>
-<body>
+<body  background="<c:url value="/resources/js/country.js" />" >
 <div id="wrap">
 
 	<%@ include file="./shared/navbar.jsp"%>
@@ -76,10 +199,22 @@ html, body {
 		<%@ include file="about.jsp"%>
 	</c:if>
 	
+	<c:if test="${userclickupdate == true }">
+		<%@ include file="update.jsp"%>
+	</c:if>
+	
+	
+	
 	
 	<c:if test="${userclickid == true }">
 		<%@ include file="print.jsp"%>
 	</c:if>
+	
+	<c:if test="${success == true }">
+		<%@ include file="success.jsp"%>
+	</c:if>
+	
+	
 	
 	
 
@@ -93,7 +228,7 @@ html, body {
 	</c:if>
 	
 	<c:if test="${userclickdeletedmembers == true }">
-		<%@ include file="appliedmembers.jsp"%>
+		<%@ include file="deletedmembers.jsp"%>
 	</c:if>
 
 
@@ -103,6 +238,9 @@ html, body {
 
 </div>
 	<%@ include file="./shared/footer.jsp"%>
+	<%-- <script type='text/javascript' src='<c:url value="/resources/js/validation.js" />'></script>
+ --%>	
+	<%-- <script type='text/javascript' src='<c:url value="/resources/js/formvalidate.js" />'></script> --%>
 	
 </body>
 </html>

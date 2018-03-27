@@ -1,6 +1,6 @@
-<div class=row>
-	<form action="">
-		Enter ${category}:<input type="text" name="memid" /> <input
-			type="submit" value="submit">
+
+	<form action="" class="form-inline">
+		Enter ${category}:<input type="text" name="memid" class="form-control"/> 
+		<input type="submit" class="form-control" value="submit">
 	</form>
-</div>
+

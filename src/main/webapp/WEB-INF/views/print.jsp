@@ -27,14 +27,14 @@
 
 	</div> -->
 
-	<form class="form-horizontal" >
+	<form class="form-horizontal" method="post" >
 
 		<div class="row">
 			<div class="col-lg-4">
 
-				<label for="sel2">Mutiple</label> <select name="category" class="form-control"
+				<label for="sel2">category</label> <select name="category" class="form-control"
 					id="sel2">
-					<option>districk</option>
+					<option>district</option>
 					<option>ward</option>
 					<option>state</option>
 
@@ -43,12 +43,12 @@
 			</div>
 			<div class="col-lg-6">
 
-				<label for="sel2">Mutiple</label> <input type="text" name="name"
+				<label for="sel2"> select </label> <input type="text" name="name"
 					class="form-control" placeholder="Enter Name">
 	
 			</div>
 			<div class="col-lg-2">
-				<label>click here to exprt to pdf</label>
+				<label>export to pdf</label>
 				 <input type="submit" class="form-control" value="submit">
 			</div>
 			

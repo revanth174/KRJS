@@ -53,7 +53,8 @@ public class Sms{
             String response;
             while ((response = reader.readLine()) != null)
                 //print response
-                System.out.println(response);
+       
+            	System.out.println(response);
 
             System.out.println("donesms");
             //finally close connection
@@ -64,5 +65,12 @@ public class Sms{
             e.printStackTrace();
         }
     }
+   
+   public static void main(String args[]) {
+	   Sms s = new Sms();
+	   System.out.println("sdkfjkl");
+	   s.sendSms("7396880443");
+	  
+   }
 }
 

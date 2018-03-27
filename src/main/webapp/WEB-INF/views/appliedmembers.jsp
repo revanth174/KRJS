@@ -21,7 +21,7 @@
 </table> --%>
 
 <div class="container">
-	<table class="table table-hover">
+	<table class="table table-hover" id="datatable">
 		<thead>
 			<tr>
 				<th>photo</th>
@@ -37,27 +37,27 @@
 		<tbody>
 			<c:forEach var="mem" items="${memberobject }">
 				<tr>
-					<td><img
-						src="<c:url value="/resources/images/${mem.getMemberId()}.jpg" />"
-						alt="no image" height="100" width="100" class="img-thumbnail"></td>
+					<td>
+					<img src="<c:url value="/resources/images/${mem.getMemberId()}.jpg" />"
+						alt="no image" height="100" width="100" /></td>
 					<td>${mem.getMemberId()}</td>
 					<td>${mem.getAppNo()}</td>
 					<td>${mem.getName()}</td>
-					<td>${mem.getFname()}</td>
+					<td>${mem.getFhname()}</td>
 					<td>${mem.getAddress().getState()}</td>
-					<td><a href=#>${mem.getPayment().getProposerMemberId() }</a></td>
-
-					<td><button type="button" data-toggle="modal"
-							data-target="#myModal">delete</button>/ <a
+					<td><a href=# id="${mem.getProposerMemberId() }">${mem.getProposerMemberId() }</a></td>
+ 
+					<td><a data-toggle="modal"
+							href="#myModal${mem.getMemberId()}">delete</a>/ <a
 						href="${contextRoot }/show/pending/members/approve/${mem.getMemberId()}">approve</a>
-						<div class="modal fade" id="myModal">
+						<div class="modal fade" id="myModal${mem.getMemberId()}">
 							<div class="modal-dialog">
 
 								<!-- Modal content-->
 								<div class="modal-content">
 									<div class="modal-header">
 										<button type="button" class="close" data-dismiss="modal">&times;</button>
-										<h4 class="modal-title">Modal Header</h4>
+										<h4 class="modal-title">Enter remarks</h4>
 									</div>
 									<form action="${contextRoot }/show/pending/members/delete/${mem.getMemberId()}">
 									<div class="modal-body">
@@ -73,7 +73,7 @@
 									<div class="modal-footer">
 										<%-- <button type="button" class="btn btn-default" onclick="${contextRoot }/show/pending/members/delete/${mem.getMemberId()}"
 											data-dismiss="modal">Close</button> --%>
-											<input type="submit" class="form-control" value="click" />
+											<input type="submit" class="form-control" value="sumit" />
 									</div>
 									</form>
 								</div>

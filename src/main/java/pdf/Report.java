@@ -3,6 +3,7 @@ package pdf;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Iterator;
 import java.util.List;
 
@@ -18,6 +19,8 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.reddy.krjs.supportEnd.Model.Member;
+import com.reddy.krjs.supportEnd.dao.MemberDao;
+import com.reddy.krjs.supportEnd.daoimpl.MemberDaoImpl;
 
 
 
@@ -60,17 +63,35 @@ import com.reddy.krjs.supportEnd.Model.Member;
 	}
 }
 */
-public class IdCard {
+public class Report {
 	public static  Document document ;
 	
 	
-/*	 public static void main(String args[]) throws DocumentException, IOException {
-		 List<Member> mem = new ArrayList<>();
-		 mem.add(new Member("venki","mem","address","1853454"));
-		 mem.add(new Member("nalaval","mem23","address123","53132454"));
-		 IdCard.memberPrint(mem);
+	 public static void main(String args[]) throws DocumentException, IOException {
+		 SimpleDateFormat sdf = new SimpleDateFormat("dd/M/yyyy");
+			/*String date = sdf.format(new Date()); 
+			
+			//System.out.println(date);
+			
+			
+	       
+	        Calendar calendar = new GregorianCalendar();
+	        int year       = calendar.get(Calendar.YEAR);
+	    	int month      = calendar.get(Calendar.MONTH);
+	    	int day 		= calendar.get(Calendar.DAY_OF_MONTH);
+	    	int hourOfDay  = calendar.get(Calendar.HOUR_OF_DAY); // 24 hour clock
+	    	int minute     = calendar.get(Calendar.MINUTE);
+	    	int second     = calendar.get(Calendar.SECOND);
+	    	System.out.println(""+year+month+day+hourOfDay+minute+second);
+	    	System.out.println(month);
+	    	System.out.println(day);*/
+		  
+		    MemberDao dao = new MemberDaoImpl();
+		    List<Member> l = dao.getByDistrict("mumbai");
+		    memberPrint(l,"voter", "F:\\First\\pro\\.metadata\\.plugins\\org.eclipse.wst.server.core\\tmp0\\wtpwebapps\\krjs\\webapp\r\n" + 
+		    		"/krjs");
 	 }
-	 */
+	 
 
 	public static void memberPrint(List<Member> p,String name,String path)
 			throws DocumentException,IOException {
@@ -160,7 +181,7 @@ public class IdCard {
 	
 			PdfPCell celldetails = new PdfPCell();
 			celldetails.addElement(new Phrase(m.getName(),font3));
-			celldetails.addElement(new Phrase(m.getFname(),font3));
+			celldetails.addElement(new Phrase(m.getFhname(),font3));
 			celldetails.setVerticalAlignment(Element.ALIGN_CENTER);
 			celldetails.setBorder(Rectangle.NO_BORDER);
 			nesttable.addCell(celldetails);

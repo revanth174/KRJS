@@ -1,6 +1,8 @@
 package com.reddy.krjs.controllers;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Random;
 
@@ -66,12 +68,26 @@ public class PageController {
 	}
 
 	@RequestMapping("/form")
-	public ModelAndView form() {
+	public ModelAndView form(@RequestParam(value = "member",required = false) Member member) {
 		System.out.println("welcome to pagecontroller->form()");
 		ModelAndView mv = new ModelAndView("page");
 		mv.addObject("title", "Application form");
 		mv.addObject("userclickform", true);
-		mv.addObject("member", new MemberDup());
+		Calendar calendar = new GregorianCalendar();
+		int year = calendar.get(Calendar.YEAR);
+		int month = calendar.get(Calendar.MONTH);
+		int day = calendar.get(Calendar.DAY_OF_MONTH);
+		int hourOfDay = calendar.get(Calendar.HOUR_OF_DAY); // 24 hour clock
+		int minute = calendar.get(Calendar.MINUTE);
+		int second = calendar.get(Calendar.SECOND);
+		String appno = "A" + year + month + day + hourOfDay + minute + second;
+		String memid = "M" +  year + month + day + hourOfDay + minute + second;
+		mv.addObject("appno",appno);
+		mv.addObject("memid",memid);
+		if(member != null )
+			mv.addObject("member", member);
+		else
+			mv.addObject("member",new Member());
 		return mv;
 	}
 
@@ -89,36 +105,39 @@ public class PageController {
 			@RequestParam(value = "memid", required = false) String catvalue) {
 		System.out.println("welcome to pagecontroller->showcategoryMembers()");
 		System.out.println(catvalue);
-
+		List<Member> l = null;
 		ModelAndView mv = new ModelAndView("page");
 		if (catvalue != null) {
 			mv.addObject("entered", category + catvalue);
 			if (category.equals("memberid")) {
 				System.out.println("category = memberid");
 				Member mem = service.getById(catvalue);
-				List<Member> li = new ArrayList<>();
-				li.add(mem);
-				mv.addObject("memberobject", li);
+				l = new ArrayList<>();
+				l.add(mem);
+				
 
 			} else if (category.equals("taluk")) {
 				System.out.println("category = taluk");
-				List<Member> li = service.getByTaluk(catvalue);
-				mv.addObject("memberobject", li);
-
+				l = service.getByTaluk(catvalue);
+				
 			} else if (category.equals("phone")) {
 
-				List<Member> li = service.getByMobileNumber(Long.parseLong(catvalue));
-				mv.addObject("memberobject", li);
+				l = service.getByMobileNumber(Long.parseLong(catvalue));
+				
 
 			} else if (category.equals("district")) {
-				List<Member> li = service.getByDistrict((catvalue));
-				mv.addObject("memberobject", li);
+				l = service.getByDistrict((catvalue));
+				
 
 			} else if (category.equals("pincode")) {
-				List<Member> li = service.getByPincode(Integer.parseInt(catvalue));
-				mv.addObject("memberobject", li);
+				l = service.getByPincode(Integer.parseInt(catvalue));
+				
+			} else if (category.equals("state")) {
+				l = service.getByState(catvalue);
+				
 			}
 		}
+		mv.addObject("memberobject", l);
 		mv.addObject("title", category);
 		mv.addObject("category", category);
 		mv.addObject("userclickcategorymembers", true);
@@ -138,8 +157,7 @@ public class PageController {
 		mv.addObject("memberobject", li);
 		return mv;
 	}
-	
-	
+
 	@RequestMapping(value = "/show/deleted/all/members")
 	public ModelAndView deletedMember() {
 		ModelAndView mv = new ModelAndView("page");
@@ -176,23 +194,22 @@ public class PageController {
 			u.setEnable(true);
 			u.setRole("ROLE_USER");
 			Random r = new Random();
-			int password = r.nextInt(4);
-			
+			int password = 7396;
 			u.setPassword(passwordEncoder.encode(Integer.toString(password)));
-			
+
 			try {
 				service.insertAndDelete(member);
 				service.insert(u);
-				} catch(Exception e) {
-					e.printStackTrace();
-				}
-			
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
 			Thread d = new Thread(() -> new Email().sendMain(member.getDetails().getGmail()));
 			d.start();
 			// new Email().sendMain(member.getDetails().getGmail());
 			new Thread(() -> {
 				try {
-					new BulkSms().send(Long.toString(member.getDetails().getPhone()));
+					new BulkSms().send(member.getMemberId(),Long.toString(member.getDetails().getPhone()));
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -212,6 +229,10 @@ public class PageController {
 		mv.addObject("title", "login");
 		if (logout != null) {
 			mv.addObject("logout", "User has successfully logged out!");
+			
+		} 
+		else{
+			mv.setViewName("page");
 		}
 		return mv;
 	}
@@ -222,7 +243,7 @@ public class PageController {
 		ModelAndView mv = new ModelAndView("error");
 		mv.addObject("title", "error");
 		mv.addObject("errorTitle", "caught you");
-		mv.addObject("errorDescription", "you are authorized to vieww");
+		mv.addObject("errorDescription", "you are authorized to view");
 
 		return mv;
 	}
@@ -239,13 +260,13 @@ public class PageController {
 
 		return "redirect:/login?logout";
 	}
-	
+
 	@RequestMapping("/hello")
 	public ModelAndView hello() {
 		System.out.println("welcome to pagecontroller->login()");
 		ModelAndView mv = new ModelAndView("hello");
 		mv.addObject("title", "login");
-		
+
 		return mv;
 	}
 
