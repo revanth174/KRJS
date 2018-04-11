@@ -15,8 +15,9 @@
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <link rel="stylesheet"  href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
 <script type="text/javascript" src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <!-- <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.17.0/jquery.validate.min.js"></script> -->
-
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.min.js"></script>
 <link href="<c:url value="/resources/css/footer.css" />"
 	rel="stylesheet">
@@ -56,7 +57,26 @@ $(document).ready(function() {
 		return /^[6789]/.test(value);
 	},'phone number must begins with either 6,7,8 or 9')
 	
+	$.validator.addMethod("datechange",function(value,element) {
+			
+			var dob = new Date(value);
+			var today = new Date();
+			
+			var age = today.getFullYear() - dob.getFullYear() ;
+			if(age>=18)
+				return true;
+	},'age should minimun 18 years ')
+	
 	$('#datatable').DataTable();
+	
+	
+	$("#datepicker").datepicker({
+		changeMonth: true,
+	    changeYear: true,
+	    dateFormat: 'dd/mm/yy',
+	    yearRange: "1950:2050",
+	    
+	})
 	
 	$("#register-form").validate({
 		rules: {
@@ -89,6 +109,9 @@ $(document).ready(function() {
 				startwith : true
 				
 			},
+			dob : {
+				datechange : true
+			},
 			gender : "required",
 			"details.qualification"  : "required",
 			"details.occupation"  : "required",
@@ -111,6 +134,19 @@ $(document).ready(function() {
 						
 					}
 				}
+			},
+			"payment.refNo"  : {
+				required : true,
+				remote  : {
+					url : '<c:url value="/memberref" />',
+					method : 'post',
+					data : {
+						name : function () {
+							return $("#ref").val();
+						}
+						
+					}
+				}
 			}
 			
 
@@ -122,16 +158,25 @@ $(document).ready(function() {
 			},
 			"ProposerMemberId" : {
 				remote : 'member doesnot exist'
+			},
+			"payment.refNo" : {
+				remote : 'already exist'
 			}
 			
 		
 
 
-		}
+		},
+		
+		
 	});   
 });
 
 </script> 
+
+
+
+
 	
 
 <%-- <link href="<c:url value="/resources/css/remarks.css" />"
@@ -203,6 +248,10 @@ background-position: center center;
 		<%@ include file="update.jsp"%>
 	</c:if>
 	
+	<c:if test="${clickupdateform == true }">
+		<%@ include file="updateform.jsp"%>
+	</c:if>
+	
 	
 	
 	
@@ -215,6 +264,9 @@ background-position: center center;
 	</c:if>
 	
 	
+	<c:if test="${idcard == true }">
+		<%@ include file="memberlist.jsp"%>
+	</c:if>
 	
 	
 
@@ -235,11 +287,15 @@ background-position: center center;
 	<c:if test="${userclickform == true }">
 		<%@ include file="form.jsp"%>
 	</c:if>
+	
+	
+</div>
+	
 
 </div>
 	<%@ include file="./shared/footer.jsp"%>
-	<%-- <script type='text/javascript' src='<c:url value="/resources/js/validation.js" />'></script>
- --%>	
+ <script type='text/javascript' src='<c:url value="/resources/js/state.js" />'></script>
+ 
 	<%-- <script type='text/javascript' src='<c:url value="/resources/js/formvalidate.js" />'></script> --%>
 	
 </body>

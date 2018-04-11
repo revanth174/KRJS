@@ -15,14 +15,17 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.reddy.krjs.supportEnd.Model.Member;
 import com.reddy.krjs.supportEnd.Model.MemberDup;
 import com.reddy.krjs.supportEnd.Model.Users;
+import com.reddy.krjs.supportEnd.Model.Ward;
 import com.reddy.krjs.supportEnd.dao.MemberDao;
 import com.reddy.krjs.supportEnd.service.MemberService;
 
@@ -68,7 +71,7 @@ public class PageController {
 	}
 
 	@RequestMapping("/form")
-	public ModelAndView form(@RequestParam(value = "member",required = false) Member member) {
+	public ModelAndView form(@RequestParam(value = "member", required = false) Member member) {
 		System.out.println("welcome to pagecontroller->form()");
 		ModelAndView mv = new ModelAndView("page");
 		mv.addObject("title", "Application form");
@@ -81,13 +84,14 @@ public class PageController {
 		int minute = calendar.get(Calendar.MINUTE);
 		int second = calendar.get(Calendar.SECOND);
 		String appno = "A" + year + month + day + hourOfDay + minute + second;
-		String memid = "M" +  year + month + day + hourOfDay + minute + second;
-		mv.addObject("appno",appno);
-		mv.addObject("memid",memid);
-		if(member != null )
+		String memid = "M" + year + month + day + hourOfDay + minute + second;
+		mv.addObject("appno", appno);
+		mv.addObject("memid", memid);
+		if (member != null)
 			mv.addObject("member", member);
 		else
-			mv.addObject("member",new Member());
+			mv.addObject("member", new Member());
+		mv.addObject("wards",service.listOfWards());
 		return mv;
 	}
 
@@ -114,27 +118,24 @@ public class PageController {
 				Member mem = service.getById(catvalue);
 				l = new ArrayList<>();
 				l.add(mem);
-				
 
 			} else if (category.equals("taluk")) {
 				System.out.println("category = taluk");
 				l = service.getByTaluk(catvalue);
-				
+
 			} else if (category.equals("phone")) {
 
-				l = service.getByMobileNumber(Long.parseLong(catvalue));
-				
+				l = service.getByMobileNumber(catvalue);
 
 			} else if (category.equals("district")) {
 				l = service.getByDistrict((catvalue));
-				
 
 			} else if (category.equals("pincode")) {
-				l = service.getByPincode(Integer.parseInt(catvalue));
-				
+				l = service.getByPincode(catvalue);
+
 			} else if (category.equals("state")) {
 				l = service.getByState(catvalue);
-				
+
 			}
 		}
 		mv.addObject("memberobject", l);
@@ -209,13 +210,12 @@ public class PageController {
 			// new Email().sendMain(member.getDetails().getGmail());
 			new Thread(() -> {
 				try {
-					new BulkSms().send(member.getMemberId(),Long.toString(member.getDetails().getPhone()));
+					new BulkSms().send(member.getMemberId(), member.getDetails().getPhone());
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}).start();
-			;
 
 		}
 		return mv;
@@ -223,19 +223,85 @@ public class PageController {
 	}
 
 	@RequestMapping("/login")
-	public ModelAndView login(@RequestParam(name = "logout", required = false) String logout) {
+	public ModelAndView login(@RequestParam(name = "error", required = false) String error) {
 		System.out.println("welcome to pagecontroller->login()");
 		ModelAndView mv = new ModelAndView("login");
 		mv.addObject("title", "login");
-		if (logout != null) {
-			mv.addObject("logout", "User has successfully logged out!");
-			
-		} 
-		else{
-			mv.setViewName("page");
+		if (error != null) {
+			mv.addObject("error", "invalid memberid or password");
+
+		}
+
+		return mv;
+	}
+	
+	
+	
+
+	@RequestMapping("/login/forgot")
+	public ModelAndView forgot(@RequestParam(name = "memberid",required = false) String id,
+			@RequestParam(name = "newpassword", required = false) String newpassword) {
+		ModelAndView mv = new ModelAndView("forgot");
+		
+		mv.addObject("title","forgot");
+		if(id == null)
+			mv.addObject("forgotpassword",true);
+		else {
+			service.changeUserPassword(newpassword, id);
+			mv.addObject("success", "true");
+			mv.addObject("newpasswordchanged",true);
 		}
 		return mv;
 	}
+
+	@RequestMapping("/sendcode")
+	@ResponseBody
+	public String sendcode(@RequestParam("name") String memberid) {
+
+		System.out.println("sendcode");
+		Member m = service.checkMemberId(memberid);
+		if(m == null)
+			return "false";
+		else {
+			String code = Integer.toString(new Random().nextInt(1000000));
+			try {
+				memberdao.insert_code(code, memberid);
+				new Thread(() -> {
+					try {
+						new BulkSms().sendForgotCode(memberid, m.getDetails().getPhone(), code);
+					} catch (Exception e) {
+						
+						e.printStackTrace();
+					}
+				}).start();	
+				
+			} catch (Exception e) {
+				
+			}
+		}
+		
+		return "true";
+		
+	}
+	
+	
+	@RequestMapping("/checkcode")
+	@ResponseBody
+	public String checkcode(@RequestParam("name") String id,
+			@RequestParam(name = "enteredcode", required = false) String enteredcode) {
+
+		System.out.println("checkcode");
+		Boolean check= false;
+		if(id!= null && enteredcode != null) 
+			check = memberdao.checkCode(enteredcode, id);
+
+		
+		
+		return check.toString();
+		
+	}
+
+	
 
 	@RequestMapping("/access-denied")
 	public ModelAndView denied() {
@@ -268,6 +334,26 @@ public class PageController {
 		mv.addObject("title", "login");
 
 		return mv;
+	}
+	
+	
+	@RequestMapping("/ward") 
+	public ModelAndView ward() {
+		ModelAndView mv = new ModelAndView("ward");
+		mv.addObject("title","ward");
+		mv.addObject("ward",new Ward());
+		mv.addObject("wards",service.listOfWards());
+		return mv;
+	}
+	
+	
+	@RequestMapping("/ward/add") 
+	public String addWard(@ModelAttribute("ward") Ward ward) {
+		System.out.println(ward.getWardName());
+		System.out.println(ward.getWardNumber());
+		service.addWard(ward);
+		
+		return "redirect:/ward";
 	}
 
 }

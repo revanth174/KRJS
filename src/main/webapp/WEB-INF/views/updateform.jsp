@@ -1,7 +1,6 @@
-<% int a = 10;
-%>
+
 <div class="container well" style="margin-top: 50px">
-	<form:form action="${contextRoot }/add" modelAttribute="member" id="register-form"
+	<form:form action="${contextRoot }/memberupdate/" modelAttribute="member" id="register-form"
 		method="post" enctype="multipart/form-data">
 		<fieldset style="margin-top: 15px">
 			<legend>MemberShip form</legend>
@@ -23,7 +22,7 @@
 				readonly="true" />
 		</div>
 
-		
+		<!-- </div> -->
 		<div class="clearfix"></div>
 
 		<!-- <div class="row"> -->
@@ -31,7 +30,7 @@
 			<label for="sel1">Select list (select one):</label>
 			<form:select class="form-control" id="sel1" name="register_title"
 				path="title">
-				<form:option value="Mr"><%= a %></form:option>
+				<form:option value="Mr">Mr</form:option>
 				<form:option value="Mrs">Mrs</form:option>
 				<form:option value="Miss">Miss</form:option>
 				<form:option value="Dr">Dr.</form:option>
@@ -181,139 +180,23 @@
 
 		<div class="col-md-4 form-group">
 			<label>Town/Taluk</label>
-			<form:select class="form-control" path="address.taluk"
-				id="register_taluk" >
-				<form:option value="select"> select</form:option>
-			</form:select>
+			<form:input type="text" class="form-control" path="address.taluk"
+				name="register_town" />
 		</div>
 
 		<!-- </div> -->
 
 		<!-- <div class="row"> -->
-		
-		<div class="col-md-4 form-group">
-			<label>State</label>
-			<form:select class="form-control" path="address.state" id="register_state"
-				 >
-				<form:option value="select">select</form:option>
-				<form:option value="karnataka">karnataka</form:option>
-				<form:option value="andhra pradesh">Andhra Pradesh</form:option>
-				<form:option value="telangana">Telangana</form:option>
-				<form:option value="tamilnadu">tamilnadu</form:option>
-				
-			</form:select>
-		</div>
 		<div class="col-md-4 form-group">
 			<label>Disrict</label>
-			<form:select class="form-control" path="address.district" id="register_district"
-				 >
-				<form:option value="select"> select </form:option>
-			</form:select>
+			<form:input type="text" class="form-control" path="address.district"
+				name="register_district" />
 		</div>
-<script type="text/javascript">
-
-var kar = ["Bagalkot","Belagavi","Bellary","Bengaluru Urban","Bengaluru Rural","Bidar","Bijapura","Chamarajanagar","Chikballapur",
-	"Chikkamagaluru","Chitradurga","Dakshina Kannada","Davanagere","Dharwad","Gadag","Gulbarga","Haveri","Hassan","Kolar",
-	"Koppal","Kodagu","Mandya","Mysuru","Raichur","Ramanagara","Shivmogga","Tumakuru","Udupi","Uttara Kannada","Yadgir"];
-var ap = ["Anantapur","Chittoor","East Godavari","Guntur","YSR Kadapa","Krishna","Kurnool","Nellore","Prakasam","Srikakulam",
-	"Visakhapatnam","Vizianagaram","West Godavari"];
-
-var tn = ["Ariyalur","Chennai","Coimbatore","Cuddalore","Dharmapuri","Dindigul","Erode","Kancheepuram","Karur","Krishnagiri",
-	"Madurai","Nagapattinam","Kanyakumari","Namakkal","Perambalur","Pudukottai","Ramanathapuram","Salem","Sivagangai","Thanjavur",
-	"Theni","Thiruvallur","Thiruvarur","Tiruppur","Thiruvannamalai","The Nilgiris","Vellore","Villupuram","Virudhunagar"];
-var ts = ["Adilabad","Bhadradri Kothagudem","Hyderabad","Jagtial","Jangaon","Jayashankar Bhupalpally","Jogulamba Gadwal",
-	"Kamareddy","Karimnagar","Khammam","Kumuram Bheem","Mahabubabad","Mahabubnagar","Mancherial","Medak","Medchal","Nagarkurnool",
-	"Nalgonda","Nirmal","Nizamabad","Peddapalli","Rajanna Sircilla","Rangareddy","Sangareddy","Siddipet","Suryapet","Vikarabad",
-	"Wanaparthy","Warangal (Rural)","Warangal (Urban)","Yadadri Bhuvanagiri"];
-
-var kt = [];
-kt["Bagalkot"] = "Bagalkote|Jamkhandi|Mudhola|Badami|Bilagi|Hungunda|Ilkal|Rabkavi Banhatti|Guledgudda";
-kt["Belagavi"] = "Athani|Bailahongala|Belagavi|Chikodi|Gokak|Hukkeri|Khanapura|Ramdurga|Raybaga|Saundatti|Kittur|Nipani|Mudalgi|Kagawad";
-kt["Bellary"] = "Ballari|Hospete|Hoovina Hadagalli|Hagaribommanahalli|Kudligi|Sanduru|Siruguppa|Kotturu|Kampli|Kurugodu";
-kt["Bengaluru Urban"] = "Anekal|Bengaluru South|Bengaluru North|Bengaluru East";
-kt["Bengaluru Rural"] = "Doddaballapura|Devanhalli|Hosakote|Nelmangala";
-kt["Bidar"] = "Aurad|Basavakalyana|Bidar|Bhalki|Homnabad|Chitgoppa|Hulsoor|Kamalnagar";
-kt["Bijapura"] = "Bijapur|Basavan Bagevadi|Indi|Muddebihala|Sindagi|Talikote|Chadchan|Devar Hipparagi|Kolhar|Nidagundi|Babaleshwar|Tikota";
-kt["Chamarajanagar"] = "Chamrajnagara|Gundlupete|Kollegala|Yelandur|Hanur";
-kt["Chikballapur"] = "Chikkaballapur|Bagepalli|Chintamani|Gauribidanuru|Gudibanda|Sidlaghatta";
-kt["Chikkamagaluru"] = "Chikkamagaluru|Kadur|Koppa|Mudigere|Narasimharajapura|Sringeri|Tarikere|Ajjampura";
-kt["Chitradurga"] = "Chitradurga|Challakere|Hiriyuru|Holalkere|Hosdurga|Molakalmuru";
-kt["Dakshina Kannada"] = "Mangalore|Ullal|Kotekar| Mulki|Puttur|Bantwala|Beltangadi|Sulya|Moodbidri";
-kt["Davanagere"] = "Davanagere|Harihara| Harpanahalli| Honnali|Nyamathi|Jagaluru";
-kt["Dharwad"] = "Kalghatgi|Dharwada|Hubballi (Rural)|Hubballi (Urban)|Kundgol|Navalgunda|Alnavar|Annigeri";
-kt["Gadag"] = "Gadaga-Betigeri|Nargunda|Mundargi|Ron|Shirahatti";
-kt["Gulbarga"] = "Gulbarga|Afzalpura|Alanda|Chincholi|Chitapura|Jevargi|Sedam|Shahabad";
-kt["Haveri"] = "Ranibennur|Byadgi|Hangal|Haveri|Savanur|Hirekeruru|Shiggaon";
-kt["Kolar"] = "Hassan|Arsikere|Channarayapattana|Holenarsipura|Sakleshpura|Alur|Arkalgudu|Belur";
-
-	$(function() {
-		$state = $("#register_state");
-		$dis = $('#register_district');
-		$options = "<option>select district</option>";
-		var i;
-		$state.change(function() {
-			alert($(this).val());
-			if($(this).val() == "karnataka") {
-				alert($(this).val());
-				
-				
-				for (i = 0; i < kar.length; i++) { 
-				    
-					$options += "<option value='"+kar[i] +"'>"+kar[i]+"</option>";
-					
-				}
-				$('select#register_district').html($options);
-			} else if($(this).val() == "andhra pradesh") {
-				alert($(this).val());
-				
-				
-				for (i = 0; i < ap.length; i++) { 
-				    
-					$options += "<option value='"+ap[i] +"'>"+ap[i]+"</option>";
-					
-				}
-				$('select#register_district').html($options);
-			} else if($(this).val() == "tamilnadu") {
-				alert($(this).val());
-				
-				for (i = 0; i < tn.length; i++) { 
-				    
-					$options += "<option value='"+tn[i] +"'>"+tn[i]+"</option>";
-					
-				}
-				$('select#register_district').html($options);
-			} else if($(this).val() == "telangana") {
-				alert($(this).val());
-				
-				for (i = 0; i < ts.length; i++) { 
-				    
-					$options += "<option value='"+ts[i] +"'>"+ts[i]+"</option>";
-					
-				}
-				$('select#register_district').append($options);
-			}
-			
-		});
-		$dis.change(function() {
-			var dis = $(this).val();
-			alert(dis);
-			var talukString = kt[dis];
-			var taluks = talukString.split("|");
-			alert(taluks);
-			alert(taluks[0]);
-			$talukOptions = "<option>select taluk</option>";
-			var i;
-			for(i=0;i<taluks.length;i++) {
-				$talukOptions += "<option value='"+taluks[i] +"'>"+taluks[i]+"</option>";
-			}
-			
-			$("select#register_taluk").html($talukOptions);
-		}) 
-	});
-</script>
-
-
-
+		<div class="col-md-4 form-group">
+			<label>State</label>
+			<form:input type="text" class="form-control" path="address.state"
+				name="register_state" />
+		</div>
 		<div class="col-md-4 form-group">
 			<label>Zip</label>
 			<form:input type="text" class="form-control" path="address.pincode"
@@ -322,22 +205,15 @@ kt["Kolar"] = "Hassan|Arsikere|Channarayapattana|Holenarsipura|Sakleshpura|Alur|
 		<!-- </div> -->
 		<div class="clearfix"></div>
 
-		
-		<div class=" col-md-6 form-group">
-			<label for="sel1">Select list (select one):</label>
-			<form:select class="form-control" id="sel1" name="register_ward"
-				path="details.ward">
-				<c:forEach var="ward" items="${wards }">
-					<form:option value="${ward.getWardName()}">${ward.getWardName()}</form:option>
-				</c:forEach>
-			</form:select>
-
+		<div class="col-md-6 form-group">
+			<label>Ward Name</label>
+			<form:input type="text" class="form-control" path="details.ward"
+				name="register_ward" readonly="true" />
 		</div>
-		
 		<div class="col-md-6 form-group">
 			<label>Ward Number</label>
 			<form:input type="text" class="form-control" path="details.wardNo"
-				name="register_wardno" />
+				name="register_wardno" readonly="true"/>
 		</div>
 
 		<div class="clearfix"></div>
@@ -346,7 +222,7 @@ kt["Kolar"] = "Hassan|Arsikere|Channarayapattana|Holenarsipura|Sakleshpura|Alur|
 		<div class="col-md-4 form-group">
 			<label>Proposer MemberID</label>
 			<form:input type="text" class="form-control" id="pmid"
-				path="ProposerMemberId" name="register_ward" />
+				path="ProposerMemberId" name="register_ward" readonly="true" />
 		</div>
 		<script type="text/javascript">
 $(function() {
@@ -362,7 +238,6 @@ $(function() {
 		}
 			
 	});
-	
 
 });
 </script>
@@ -394,14 +269,14 @@ $(function() {
 			<div class="modal-dialog">
 				<div class="modal-content">
 
-					<img id="formimg" src="" />
+					<img id="formimg" src="/resources/images/${ memid}.jpg" />
 				</div>
 			</div>
 		</div>
 
 <script type="text/javascript">
 	$(function() {
-		$("#formimg").hide();
+		//$("#formimg").hide();
 		$("#upload").change(function (event) {
 			var url = URL.createObjectURL(event.target.files[0]);
 			$("img").attr('src',url).show();
@@ -422,20 +297,13 @@ $(function() {
 			</select>
 		</div>
 
-		<div class="col-md-4 form-group voter" >
+		<div class="col-md-4 form-group docs">
 			<label >enter number</label>
-			<form:input type="text" class="form-control" id="voter" path="voter" />
-		</div>
-		<div class="col-md-4 form-group pan">
-			<label >enter number</label>
-			<form:input type="text" class="form-control" id="pan" path="pan" />
-		</div>
-		<div class="col-md-4 form-group docs aadhar">
-			<label >enter number</label>
-			<form:input type="text" class="form-control" id="aadhar" path="aadhar" />
+			<form:input type="text" class="form-control" id="docs" path=""/>
 		</div>
 		
 		<div class="clearfix"></div>
+		
 		
 		<p> payment details</p>
 		<div class="col-md-4 form-group">
@@ -462,10 +330,10 @@ $(function() {
 			<label>ref No</label>
 			<form:input type="text" class="form-control" id="ref"
 				 
-				path="payment.refNo" name="register_wardno" />
+				path="payment.refNo" name="register_wardno" formnovalidate="formnovalidate" readonly="true"/>
 		</div>
 		<div class="clearfix"></div>
-		
+
 		<div class="form-group col-md-12">
 			<div class="checkbox">
 				<label> <input id="terms" name="terms" type="checkbox">
@@ -481,34 +349,27 @@ $(function() {
 <script type="text/javascript">
 	$(function() {
 		
-		$(".voter").hide();
-		$(".pan").hide();
-		$(".aadhar").hide();
+		$(".docs").hide();
+		$('#ref').rules('remove', 'remote');;
 		$('#document').change(function () {
 			
 			
 			var name = $("#document").val();
 			//alert(name);
 			if(name == 'aadhar') {
-				$(".aadhar").show();
-				$(".voter").hide();
-				$(".pan").hide();
-				$("#aadhar").attr("placeholder","enter aadhar number");
-				
+				$(".docs").show();
+				$("#docs").attr("placeholder","enter aadhar number");
+				$("docs").attr("path","aadhar");
 				
 			} else if(name == 'pan') {
-				$(".pan").show();
-				$(".aadhar").hide();
-				$(".voter").hide();
-				$("#pan").attr("placeholder","enter pan number");
-				
+				$(".docs").show();
+				$("#docs").attr("placeholder","enter pan number");
+				$("#docs").attr("path","pan");
 				
 			} else if(name == 'voter') {
-				$(".voter").show();
-				$(".pan").hide();
-				$(".aadhar").hide();
-				$("#voter").attr("placeholder","enter voter number");
-				
+				$(".docs").show();
+				$("#docs").attr("placeholder","enter voter number");
+				$("#docs").attr("path","voter");
 				
 			}else
 				$("#docs").hide();

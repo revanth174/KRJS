@@ -7,7 +7,7 @@
       
       
       <li><a  class="btn" href="${contextRoot }/form">Application form</a></li>
-      <li><a class="btn" href="${contextRoot }/about">About us</a></li>
+      <li><a class="btn" href="${contextRoot }/ward/">ward</a></li>
        <li><a class="btn" href="${contextRoot }/contact">contact us</a></li>
        
         <li><a class="btn" href="${contextRoot }/show/all/members">view Members</a></li>

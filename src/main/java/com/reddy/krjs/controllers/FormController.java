@@ -3,15 +3,13 @@ package com.reddy.krjs.controllers;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Required;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -23,9 +21,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.reddy.krjs.supportEnd.Model.Address;
+import com.reddy.krjs.supportEnd.Model.Details;
 import com.reddy.krjs.supportEnd.Model.DetailsDup;
 import com.reddy.krjs.supportEnd.Model.Member;
 import com.reddy.krjs.supportEnd.Model.MemberDup;
+import com.reddy.krjs.supportEnd.Model.Payment;
 import com.reddy.krjs.supportEnd.Model.PaymentDup;
 import com.reddy.krjs.supportEnd.service.MemberService;
 
@@ -42,27 +43,30 @@ public class FormController {
 	public void initBinder(WebDataBinder webDataBinder) {
 	 SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 	 dateFormat.setLenient(false);
-	 webDataBinder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
+	 webDataBinder.registerCustomEditor(Date.class,"Dob" ,new CustomDateEditor(dateFormat, true));
 	 }
 	
 	@RequestMapping(value = {"/add"},method = RequestMethod.POST)
-	public ModelAndView add(@RequestParam("register_image") MultipartFile file, @ModelAttribute("member") MemberDup member) {
+	public ModelAndView add(@RequestParam("register_image") MultipartFile file, @ModelAttribute("member") MemberDup member,BindingResult results) {
 		System.out.println("welcome to pagecontroller->add()");
-
 		
-		System.out.println(member);
-		PaymentDup payment = new PaymentDup();
+		
+		
+		System.out.println(member.getAadhar());
+		PaymentDup payment = member.getPayment();
 		DetailsDup d = member.getDetails();
 
 		d.setMember(member);
-		payment.setFeePaid(BigDecimal.valueOf(1000.0));
+		payment.setMember(member);
+		/*payment.setFeePaid(BigDecimal.valueOf(1000.0));
 		String ref = "ref" + Integer.toString(new Random().nextInt(10000));
 		payment.setRefNo(ref);
 		payment.setMop("online");
-		payment.setApplicationDate(new Date());
+		payment.setApplicationDate(new Date());*/
 		member.setPayment(payment);
-		payment.setMember(member);
+		//payment.setMember(member);
 		System.out.println(member);
+		
 		service.insert_registerMember(member);
 		String path = "F:/First/pro/krjs/src/main/webapp/assets/images/";
 		path = path + member.getMemberId() + ".jpg";
@@ -86,6 +90,7 @@ public class FormController {
 
 		ModelAndView mv = new ModelAndView("page");
 		mv.addObject("success",true);
+		mv.addObject("inserted",true);
 		
 		return mv;
 	}
@@ -102,6 +107,17 @@ public class FormController {
 	@RequestMapping("/member")
 	@ResponseBody
 	public String check(@RequestParam("name") String memberid) {
+		
+		System.out.println("check");
+		Boolean valid = service.checkMemberId(memberid) != null;
+		return valid.toString();
+	}
+	
+	@RequestMapping("/memberref")
+	@ResponseBody
+	public String checkRef(@RequestParam("name") String memberid) {
+		
+		System.out.println("check");
 		Boolean valid = service.checkMemberId(memberid) != null;
 		return valid.toString();
 	}
@@ -112,7 +128,7 @@ public class FormController {
 		System.out.println("json");
 		Mem mem = new Mem();
 		mem.setName(m.getName());
-		mem.setPhone(Long.toString(m.getDetails().getPhone()));
+		mem.setPhone(m.getDetails().getPhone());
 		String json = JsonUtil.convertJavaToJson(mem);
 		return json;
 
@@ -121,6 +137,9 @@ public class FormController {
 	@RequestMapping(value= {"/update"})
 	public ModelAndView update(@RequestParam(value="id",required= false) String memberid) {
 		ModelAndView mv = new ModelAndView("page");
+		mv.addObject("title","update");
+		
+		System.out.println(memberid);
 		if(memberid != null) {
 			Member mem = service.getById(memberid);
 			if(mem == null) {
@@ -128,6 +147,7 @@ public class FormController {
 			} else {
 				mv.addObject("nomember",false);
 				mv.addObject("member",mem);
+				
 				
 			}
 		}
@@ -139,18 +159,96 @@ public class FormController {
 
 	@RequestMapping(value= {"/updatemember/{id}"})
 	public ModelAndView updatemember(@PathVariable("id") String memberid) {
-		ModelAndView mv = new ModelAndView("redirect:/form");
-		/*mv.addObject("userclickform", true);
+		ModelAndView mv = new ModelAndView("page");
+		mv.addObject("clickupdateform", true);
+		mv.addObject("update",true);
 		mv.addObject("title","updateform");
-*/		memberid = memberid.trim();
+		memberid = memberid.trim();
 		
 		Member mem = service.getById(memberid);
 		if(mem!=null)  {
 			System.out.println(mem.getMemberId());
-		mv.addObject("member", mem);
+			mv.addObject("member", mem);
+			mv.addObject("memid",mem.getMemberId());
 		}
 		else 
 			mv.addObject("member",null);
+		return mv;
+
+	}
+	
+	@RequestMapping(value= {"/memberupdate/"})
+	public ModelAndView memberupdate(@RequestParam("register_image") MultipartFile file, @ModelAttribute("member") Member member) {
+		ModelAndView mv = new ModelAndView("page");
+		mv.addObject("update",true);
+		if(file.isEmpty()) {
+			Member m = service.getById(member.getMemberId());
+			m.setName(member.getName());
+			m.setGender(member.getGender());
+			m.setName(member.getName());
+			m.setTitle(member.getTitle());
+			m.setType(member.getType());
+			m.setFhname(member.getFhname());
+			m.setDob(member.getDob());
+			m.setProposerMemberId(member.getProposerMemberId());
+			m.setProposerName(member.getProposerName());
+			m.setProposerPhoneNumber(member.getProposerPhoneNumber());
+			m.setAadhar(member.getAadhar());
+			m.setPan(member.getPan());
+			m.setVoter(member.getVoter());
+			
+			Details details = m.getDetails();
+			details.setGmail(member.getDetails().getGmail());
+			details.setMaritalStatus(member.getDetails().getMaritalStatus());
+			details.setNoc(member.getDetails().getNoc());
+			details.setOccupation(member.getDetails().getOccupation());
+			details.setPhone(member.getDetails().getPhone());
+			details.setQualification(member.getDetails().getQualification());
+			details.setVemanaVani(member.getDetails().getVemanaVani());
+			details.setWard(member.getDetails().getWard());
+			details.setWardNo(member.getDetails().getWardNo());
+			details.setMember(m);
+			
+			Payment payment = m.getPayment();
+			payment.setApplicationDate(member.getPayment().getApplicationDate());
+			payment.setFeePaid(member.getPayment().getFeePaid());
+			payment.setMop(member.getPayment().getMop());
+			
+			payment.setRefNo(member.getPayment().getRefNo());
+			payment.setMember(m);
+			
+			
+			Address address = m.getAddress();
+			address.setAddress(member.getAddress().getAddress());
+			address.setVillage(member.getAddress().getVillage());
+			address.setDistrict(member.getAddress().getDistrict());
+			address.setPincode(member.getAddress().getPincode());
+			address.setState(member.getAddress().getState());
+			address.setTaluk(member.getAddress().getTaluk());
+			
+			m.setAddress(address);
+			/*Payment p = member.getPayment();
+			Details d = member.getDetails();
+			p.setMember(m);
+			d.setMember(m);
+			m.setPayment(p);
+			m.setDetails(d);*/
+			/*Details d = member.getDetails();
+
+			d.setMember(member);
+			member.setDetails(d);
+			payment.setFeePaid(BigDecimal.valueOf(1000.0));
+			String ref = "ref" + Integer.toString(new Random().nextInt(10000));
+			payment.setRefNo(ref);
+			payment.setMop("online");
+			payment.setApplicationDate(new Date());
+			member.setPayment(payment);
+			payment.setMember(member);
+			System.out.println(member);*/
+			
+			service.update(m);
+			mv.addObject("updated",true);
+		}
 		return mv;
 
 	}

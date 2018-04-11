@@ -31,6 +31,7 @@
 				<th>father's name</th>
 				<th>state</th>
 				<th>Proposer memberid</th>
+				<th>dob(yyyy/mm/dd)</th>
 				<th>status</th>
 			</tr>
 		</thead>
@@ -45,7 +46,9 @@
 					<td>${mem.getName()}</td>
 					<td>${mem.getFhname()}</td>
 					<td>${mem.getAddress().getState()}</td>
+					
 					<td><a href=# id="${mem.getProposerMemberId() }">${mem.getProposerMemberId() }</a></td>
+					<td>${mem.getDob()}</td>
  
 					<td><a data-toggle="modal"
 							href="#myModal${mem.getMemberId()}">delete</a>/ <a

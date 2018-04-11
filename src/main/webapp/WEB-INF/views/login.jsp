@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
+	pageEncoding="ISO-8859-1"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <c:set var="contextRoot" value="${pageContext.request.contextPath}"></c:set>
@@ -13,7 +13,8 @@
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<link href="<c:url value="/resources/css/footer.css" />" rel="stylesheet" >
+<link href="<c:url value="/resources/css/footer.css" />"
+	rel="stylesheet">
 
 <script src="<c:url value="/resources/js/country.js" />"></script>
 <script src="<c:url value="/resources/js/imageupload.js" />"></script>
@@ -23,111 +24,140 @@
 
 <%-- <link href="<c:url value="/resources/css/remarks.css" />"
 	rel="stylesheet"> --%>
+<style type="text/css">
+#wrap {
+	min-height: 100%;
+	height: auto;
+	/* Negative indent footer by its height */
+	margin: 0 auto -60px;
+	/* Pad bottom by footer height */
+	padding: 0 0 60px;
+}
 
+body {
+	height: 100%;
+
+	/* The html and body elements cannot have any padding or margin. */
+}
+
+.container {
+	width: auto;
+	max-width: 1200px;
+	padding: 0 15px;
+}
+
+.container .credit {
+	margin: 20px 0;
+}
+
+#footer {
+	height: 60px;
+	background-color: #f5f5f5;
+}
+</style>
 
 <title>krjs-${title }</title>
 </head>
 <body>
-
-
-	<%-- <div class="wrapper">
-
-		<!-- Navigation -->
-		<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-			<div class="container">
-				<!-- Brand and toggle get grouped for better mobile display -->
-				<div class="navbar-header">
-					<a class="navbar-brand" href="${contextRoot}/home">Online
-						Shopping</a>
-				</div>
+	<div id="wrap">
+		<nav class="navbar navbar-inverse">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="#">KRJS</a>
 			</div>
-		</nav> --%>
-
-		<!-- Page Content -->
-
-		<div class="content">
-
-			<div class="container">
-				<%-- this will be displayed if the credentials are wrong --%>
-				<c:if test="${not empty message}">
-					<div class="row">
-
-						<div class="col-md-offset-3 col-md-6">
-
-							<div class="alert alert-danger">${message}</div>
-
-						</div>
-					</div>
-
-				</c:if>
-				<%-- this will be displayed only when user has logged out --%>
-				<c:if test="${not empty logout}">
-					<div class="row">
-
-						<div class="col-md-offset-3 col-md-6">
-
-							<div class="alert alert-success">${logout}</div>
-
-						</div>
-					</div>
-
-				</c:if>
+			<ul class="nav navbar-nav">
 
 
-				<div class="row">
-
-					<div class="col-md-offset-3 col-md-6">
-
-						<div class="panel panel-primary">
-
-							<div class="panel-heading">
-								<h4>Login</h4>
-							</div>
-
-							<div class="panel-body">
-								<form action="${contextRoot}/login" method="POST"
-									class="form-horizontal" id="loginForm">
-									<div class="form-group">
-										<label for="username" class="col-md-4 control-label">ID:
-										</label>
-										<div class="col-md-8">
-											<input type="text" name="name" id="username"
-												class="form-control" />
-										</div>
-									</div>
-									<div class="form-group">
-										<label for="password" class="col-md-4 control-label">Password:
-										</label>
-										<div class="col-md-8">
-											<input type="password" name="password" id="password"
-												class="form-control" />
-										</div>
-									</div>
-									<div class="form-group">
-										<div class="col-md-offset-4 col-md-8">
-											<input type="submit" value="Login" class="btn btn-primary" />
-											
-										</div>
-									</div>
-								</form>
-
-							</div>
-							<div class="panel-footer">
-								<div class="text-right">
-									New User - <a href="${contextRoot}/register">Register Here</a>
-								</div>
-							</div>
-						</div>
-
-					</div>
-
-				</div>
-
-			</div>
+				<li><a class="btn" href="${contextRoot }/home"> home</a></li>
+			</ul>
 
 		</div>
-		
-	<%@ include file="./shared/footer.jsp"%>
+		</nav>
+
+		<div class="container">
+			<div class="row">
+			
+				<c:if test="${not empty error }">
+					<div class="alert alert-danger">${error }
+					</div>
+					
+				</c:if>
+			</div>
+			
+			<div class="row">
+			
+				<c:if test="${not empty logout }">
+					<div class="alert">${logout }
+					</div>
+					
+				</c:if>
+			</div>
+			
+				<div id="loginbox" style="margin-top: 50px;"
+					class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+					<div class="panel panel-info">
+						<div class="panel-heading">
+							<div class="panel-title">Sign In</div>
+							<div
+								style="float: right; font-size: 80%; position: relative; top: -10px">
+								<a href="${contextRoot }/login/forgot">Forgot password?</a>
+							</div>
+						</div>
+
+						<div style="padding-top: 30px" class="panel-body">
+
+							<div style="display: none" id="login-alert"
+								class="alert alert-danger col-sm-12"></div>
+
+							<form id="loginform" class="form-horizontal" role="form" method="post" action="${contextRoot }/login">
+
+								<div style="margin-bottom: 25px" class="input-group">
+									<span class="input-group-addon"><i
+										class="glyphicon glyphicon-user"></i></span> <input
+										id="login-username" type="text" class="form-control"
+										name="username" value="" placeholder="username or email">
+								</div>
+
+								<div style="margin-bottom: 25px" class="input-group">
+									<span class="input-group-addon"><i
+										class="glyphicon glyphicon-lock"></i></span> <input
+										id="login-password" type="password" class="form-control"
+										name="password" placeholder="password">
+								</div>
+
+
+
+								<div class="input-group">
+									<div class="checkbox">
+										<label> <input id="login-remember" type="checkbox"
+											name="remember" value="1"> Remember me
+										</label>
+									</div>
+								</div>
+
+
+								<div style="margin-top: 10px" class="form-group">
+									<!-- Button -->
+
+									<div class="col-sm-12 controls">
+										
+										<input type="submit" value="click" class="btn btn-success" /> 
+										
+
+									</div>
+								</div>
+
+							</form>
+
+
+
+						</div>
+					</div>
+				</div>
+			
+		</div>
+
 	</div>
+	<%@ include file="./shared/footer.jsp"%>
 </body>
 </html>

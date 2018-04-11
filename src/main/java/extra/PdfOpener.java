@@ -9,7 +9,7 @@ public class PdfOpener {
 	
 		
 		public void openPdf(String name,String path) throws IOException {
-        File file = new File(path+"/pdf/"+name+".pdf");
+        File file = new File(path+"/"+name+".pdf");
         
         //first check if Desktop is supported by Platform or not
         if(!Desktop.isDesktopSupported()){

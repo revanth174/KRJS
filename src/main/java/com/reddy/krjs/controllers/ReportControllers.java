@@ -1,14 +1,19 @@
 package com.reddy.krjs.controllers;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -68,8 +73,55 @@ public class ReportControllers {
 
 		return mv;
 	}
+	
+	
+	@RequestMapping(value= {"/report/idcard"})
+	public ModelAndView idcard(HttpServletRequest request) {
+		ModelAndView mv = new ModelAndView("page");
+		//mv.addObject("validlist",null);
+		request.getSession().removeAttribute("validlist");
+		Enumeration<String> e = request.getSession().getAttributeNames();
+		while(e.hasMoreElements()) {
+			System.out.println(e.nextElement());
+			
+		}
+		mv.addObject("title","idcard");
+		mv.addObject("idcard",true);
+		return mv;
+		
+	}
+	
+	
+	@RequestMapping(value= {"/report/idcardgen"})
+	public ModelAndView idcardgen(HttpServletRequest request) {
+		ModelAndView mv = new ModelAndView("page");
+		Set<String> ids = (Set<String>) request.getSession().getAttribute("validlistsession");
+		Enumeration<String> e = request.getSession().getAttributeNames();
+		while(e.hasMoreElements()) {
+			System.out.println(e.nextElement());
+			
+		}
+		Set<Member> li = new HashSet<>();
+		for(String id : ids) {
+			Member m = service.getById(id);
+			li.add(m);
+		}
+		List<Member> list = new ArrayList<>(li);
+		ids.stream().forEach(System.out:: println);
+		Report.printId(list, "id", request.getSession().getServletContext().getRealPath("assets"));
+		try {
+			new PdfOpener().openPdf("id", request.getSession().getServletContext().getRealPath("assets"));
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			System.out.println("error in opening");
+			e1.printStackTrace();
+		}
+		mv.addObject("idcard",true);
+		return mv;
+		
+	}
 
-	@RequestMapping(value = { "/report/idcard" })
+	/*@RequestMapping(value = { "/report/idcard" })
 	public ModelAndView idcard(@RequestParam(value = "category", required = false) String category,
 			@RequestParam(value = "name", required = false) String name, HttpServletRequest request)
 			throws DocumentException, IOException {
@@ -100,5 +152,29 @@ public class ReportControllers {
 
 		return mv;
 	}
-
+*/
+	
+	@RequestMapping("/report/memberlist")
+	public ModelAndView listOfIds(@RequestParam(name ="idlist") String idlist,HttpServletRequest request) {
+		
+		System.out.println(idlist);
+		String[] ids = idlist.split(",");
+		Set<String> valid = new LinkedHashSet<>();
+		Set<String> notvalid = new LinkedHashSet<>();
+		//FormController form = new FormController();
+		for(String s : ids) {
+			if(service.checkMemberId(s) != null)
+				valid.add(s);
+			else
+				notvalid.add(s);
+		}
+		request.getSession().setAttribute("validlistsession", valid);;
+		Arrays.stream(ids).forEach(x -> System.out.println(x));
+		
+		ModelAndView mv = new ModelAndView("page");
+		mv.addObject("idcard",true);
+		mv.addObject("validlist", valid);
+		mv.addObject("notvalidlist",notvalid);
+		return mv;
+	}
 }

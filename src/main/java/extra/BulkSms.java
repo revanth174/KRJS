@@ -54,7 +54,7 @@ public class BulkSms {
 		String User ="T2017081401";
 		String passwd = "th6RLkgr";
 		String mobilenumber = phone; 
-		String msg="your ward"+memid+"is absent for 5th hour on 21.08.207";
+		String msg="your ward "+ memid +" is absent for 5th hour on 29.08.2017";
 		String sid = "VEMANA";
 		String mtype = "N";
 				
@@ -82,5 +82,45 @@ public class BulkSms {
 
 		System.out.println(retval);
 	}
+	
+	
+	public void sendForgotCode(String memid,String phone,String code) throws Exception{
+		String postData="";
+		String retval = "";
+
+		//give all Parameters In String 
+		String User ="T2017081401";
+		String passwd = "th6RLkgr";
+		String mobilenumber = phone; 
+		String msg="your ward "+ code +" is absent for 5th hour on 29.08.2017";
+		String sid = "VEMANA";
+		String mtype = "N";
+				
+
+		
+		
+		postData += "User=" + URLEncoder.encode(User,"UTF-8") + "&passwd=" + passwd + "&mobilenumber=" + mobilenumber + "&message=" + URLEncoder.encode(msg,"UTF-8") + "&sid=" + sid + "&mtype=" + mtype ;
+		URL url = new URL("http://info.bulksms-service.com/WebserviceSMS.aspX");
+		//URL google = new URL("https://www.google.co.in");
+		HttpURLConnection urlconnection = (HttpURLConnection)url.openConnection();
+
+		
+		urlconnection.setRequestMethod("POST");
+		urlconnection.setRequestProperty("Content-Type","application/x-www-form-urlencoded");
+		urlconnection.setDoOutput(true);
+		OutputStreamWriter out = new OutputStreamWriter(urlconnection.getOutputStream());
+		out.write(postData);
+		out.close();
+		BufferedReader in = new BufferedReader(	new InputStreamReader(urlconnection.getInputStream()));
+		String decodedString;
+		while ((decodedString = in.readLine()) != null) {
+			retval += decodedString;
+		}
+		in.close();
+
+		System.out.println(retval);
+	}
+	
+	
 
 }

@@ -1,7 +1,5 @@
 <div class="container">
 	<h2>Inline form</h2>
-	<p>Make the viewport larger than 768px wide to see that all of the
-		form elements are inline, left aligned, and the labels are alongside.</p>
 	<form class="form-inline" action="${contextRoot }/update" method="post">
 		<div class="form-group">
 			<label for="email">Enter MemberLd : </label> <input type="text"
@@ -32,7 +30,7 @@ $(document).ready(function() {
 										<h4 class="modal-title">Enter Remarks</h4>
 									</div> -->
 
-					<div class="modal-body" style="background-color: grey">
+					<div class="modal-body">
 
 
 						<div>
@@ -47,7 +45,7 @@ $(document).ready(function() {
 						</div>
 
 					</div>
-					<div class="modal-footer" style="background-color: grey">
+					<div class="modal-footer">
 						<a href="${contextRoot }/updatemember/ ${member.getMemberId() }">click here to change details</a>
 						<button type="button" class="btn btn-default" data-dismiss="modal">submit</button>
 

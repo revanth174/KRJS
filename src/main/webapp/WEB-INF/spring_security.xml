@@ -17,18 +17,19 @@
 	<beans:bean name="bcryptEncoder"
 	class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
 	
-	
+	<!-- <http pattern="/resources/**" security="none"></http> -->
 	<!-- /* maps /abc /** maps /abc,/abc/xyz or /abc/xyz/mno abc/* maps /abc/xyz -->
 	<http>
 		
 		<intercept-url pattern="/show/**" access="hasRole('ADMIN')" />
 		<intercept-url pattern="/report/**" access="hasRole('ADMIN')" />
 		<intercept-url pattern="/**" access="permitAll()" /> 
-	    <form-login  />
+	    <form-login  login-page="/login"/>
 		<access-denied-handler error-page="/access-denied"/>
 		<logout  />
 		<csrf disabled="true"/>
 	</http>
+	
 
 	
 	<authentication-manager>
