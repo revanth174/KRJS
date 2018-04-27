@@ -65,6 +65,7 @@ $(document).ready(function() {
 			var age = today.getFullYear() - dob.getFullYear() ;
 			if(age>=18)
 				return true;
+			else return false;
 	},'age should minimun 18 years ')
 	
 	$('#datatable').DataTable();
@@ -130,19 +131,6 @@ $(document).ready(function() {
 					data : {
 						name : function () {
 							return $("#pmid").val();
-						}
-						
-					}
-				}
-			},
-			"payment.refNo"  : {
-				required : true,
-				remote  : {
-					url : '<c:url value="/memberref" />',
-					method : 'post',
-					data : {
-						name : function () {
-							return $("#ref").val();
 						}
 						
 					}
@@ -229,70 +217,130 @@ background-position: center center;
 
 	<%@ include file="./shared/navbar.jsp"%>
 
-	
-
-	<c:if test="${userclickcontact == true }">
+	<c:choose>
+		<c:when test="${userclickcontact == true }">
 		<%@ include file="contact.jsp"%>
-	</c:if>
+		</c:when>
+	
+		<c:when test="${userclickallmembers == true or userclickcategorymembers == true}">
+			<%@ include file="home.jsp"%>
+		</c:when>
+	
+		<c:when test="${userclickabout == true }">
+			<%@ include file="about.jsp"%>
+		</c:when>
+		
+		<c:when test="${userclickupdate == true }">
+			<%@ include file="update.jsp"%>
+		</c:when>
+		
+		<c:when test="${clickupdateform == true }">
+			<%@ include file="updateform.jsp"%>
+		</c:when>
+		
+		
+		
+		
+		<c:when test="${userclickid == true }">
+			<%@ include file="print.jsp"%>
+		</c:when>
+		
+		<c:when test="${success == true }">
+			<%@ include file="success.jsp"%>
+		</c:when>
+		
+		
+		<c:when test="${idcard == true }">
+			<%@ include file="memberlist.jsp"%>
+		</c:when>
+		
+		
+	
+	
+		<c:when test="${userclickreport == true }">
+			<%@ include file="report.jsp"%>
+		</c:when>
+	
+		<c:when test="${userclickpendingmembers == true }">
+			<%@ include file="appliedmembers.jsp"%>
+		</c:when>
+		
+		<c:when test="${userclickdeletedmembers == true }">
+			<%@ include file="deletedmembers.jsp"%>
+		</c:when>
+	
+	
+		<c:when test="${userclickform == true }">
+			<%@ include file="form.jsp"%>
+		</c:when>
+		
+		<c:otherwise>
+			<div class="container">
+				<div id="myCarousel" class="carousel slide" data-ride="carousel">
+			    <!-- Indicators -->
+			    <ol class="carousel-indicators">
+			      <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+			      <li data-target="#myCarousel" data-slide-to="1"></li>
+			      
+			    </ol>
+			
+			    <!-- Wrapper for slides -->
+			    <div class="carousel-inner">
+			      <div class="item active">
+			        <img src="${contextRoot }/resources/images/banner1.jpg" alt="Los Angeles" style="width:100%;">
+			      </div>
+			
+			      <div class="item">
+			        <img src="${contextRoot }/resources/images/banner2.jpg" alt="Chicago" style="width:100%;">
+			      </div>
+			    
+			      
+			    </div>
+			
+			    <!-- Left and right controls -->
+			    <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+			      <span class="glyphicon glyphicon-chevron-left"></span>
+			      <span class="sr-only">Previous</span>
+			    </a>
+			    <a class="right carousel-control" href="#myCarousel" data-slide="next">
+			      <span class="glyphicon glyphicon-chevron-right"></span>
+			      <span class="sr-only">Next</span>
+			    </a>
+			  </div>
+		  </div>
+		  
+		  <div class="container">
+		 <p>
+		  	<h2>ABOUT KRJS</h2>
+			<br/>
+			KRJS laid its founadation in 1925 with the sole aim of catering the educational needs of all sections of society.
+			Till today it continues to carve excellent niches in the minds of aspiring students. 
+			KRJS now flourishes with 12 educational institutions spreading its colorful wings all over Bangalore. 
+			Imparting 'VidyaDaana' by meditating on the slogan 'VidyaSarvasya Bhooshanam' taken from the golden hymns of our 
+			Vedas, we elate our glory by adding various discipline starting from Pre-Nursery to postgraduation courses
+			including technical courses. RJS PU College was started in 1991 with the noble aim of rendering excellent 
+			knowledge and education for the growth of budding young generation. The college is recognized by
+			Karnataka Pre- University Board and has earned 'A' Grade from the Board. It is located at lush green serenity
+			and amidst the core IT hub in Koramangala. We aim to enable the students to make a significant contribution to
+			the development of the society and the country at large by setting a strong code of ethics and values as well 
+			as openness of mind which strives to know and to learn. Our college ensures that our students live up to the high standards 
+			and the expectations and come up as a well qualified person to meet the new horizons of his dreams.
+		  </p>
+	
+	</div>
+		 
+		  
+		</c:otherwise>
 
-	<c:if
-		test="${userclickallmembers == true or userclickcategorymembers == true}">
-		<%@ include file="home.jsp"%>
-	</c:if>
+	</c:choose>
 
-	<c:if test="${userclickabout == true }">
-		<%@ include file="about.jsp"%>
-	</c:if>
 	
-	<c:if test="${userclickupdate == true }">
-		<%@ include file="update.jsp"%>
-	</c:if>
-	
-	<c:if test="${clickupdateform == true }">
-		<%@ include file="updateform.jsp"%>
-	</c:if>
-	
-	
-	
-	
-	<c:if test="${userclickid == true }">
-		<%@ include file="print.jsp"%>
-	</c:if>
-	
-	<c:if test="${success == true }">
-		<%@ include file="success.jsp"%>
-	</c:if>
-	
-	
-	<c:if test="${idcard == true }">
-		<%@ include file="memberlist.jsp"%>
-	</c:if>
-	
-	
-
-
-	<c:if test="${userclickreport == true }">
-		<%@ include file="report.jsp"%>
-	</c:if>
-
-	<c:if test="${userclickpendingmembers == true }">
-		<%@ include file="appliedmembers.jsp"%>
-	</c:if>
-	
-	<c:if test="${userclickdeletedmembers == true }">
-		<%@ include file="deletedmembers.jsp"%>
-	</c:if>
-
-
-	<c:if test="${userclickform == true }">
-		<%@ include file="form.jsp"%>
-	</c:if>
 	
 	
 </div>
 	
 
-</div>
+
 	<%@ include file="./shared/footer.jsp"%>
  <script type='text/javascript' src='<c:url value="/resources/js/state.js" />'></script>
  

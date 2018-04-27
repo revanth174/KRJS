@@ -12,11 +12,13 @@ import javax.mail.internet.MimeMessage;
 
 public class Email {
 	
-	
+	public static void main(String args[]) {
+		new Email().sendMain("poojinvr@gmail.com");
+	}
 	public void sendMain(String email) {
 
         final String username = "poojinvr@gmail.com"; // enter your mail id
-        final String password = "vendi@1742";// enter ur password
+        final String password = "poojinvr1742";// enter ur password
 
         Properties props = new Properties();
         props.put("mail.defaultEncoding=UTF-8","true");

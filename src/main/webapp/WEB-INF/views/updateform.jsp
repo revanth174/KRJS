@@ -146,17 +146,36 @@
 		<!-- <div class="row"> -->
 		<div class="col-md-6 form-group">
 			<label>Marital status</label>
-			<form:select class="form-control" id="sel1"
-				path="details.maritalStatus" name="register_marital">
+			<form:select class="form-control" 
+				path="details.maritalStatus" name="register_marital" id="marital">
 				<option value="yes">yes</option>
-				<option value="No">No</option>
+				<option value="No" selected>No</option>
 
 			</form:select>
 		</div>
+<script type="text/javascript">
+	$(function() {
+		$("#noc").attr("readonly","true");
+		$("#marital").change(function (event) {
+			$val = $(this).val();
+			
+			if($val == "yes"){
+				alert($val);
+				$("#noc").removeAttr("readonly");
+			}
+			else{
+				$("#noc").attr("readonly","true");
+			}
+				
+				
+		})
+	
+	});
+</script>
 
 		<div class="col-md-6 form-group">
 			<label>No Of children</label>
-			<form:input type="text" class="form-control" path="details.noc"
+			<form:input type="text" class="form-control" id="noc" path="details.noc"
 				name="register_noc" />
 		</div>
 		<!-- </div> -->
@@ -260,7 +279,7 @@ $(function() {
 				class="form-control" name="register_image" />
 		</div>
 		<div class="col-md-4 form-group">
-			<img src="" heigth="100" width="100" id="preview" class="popupimage">
+			<img src="${contextRoot }/resources/images/${ memid}.jpg" heigth="100" width="100" id="preview" class="popupimage">
 		</div>
 
 		<!-- </div> -->
@@ -269,12 +288,12 @@ $(function() {
 			<div class="modal-dialog">
 				<div class="modal-content">
 
-					<img id="formimg" src="/resources/images/${ memid}.jpg" />
+					<img id="formimg" src="${contextRoot }/resources/images/${ memid}.jpg" />
 				</div>
 			</div>
 		</div>
 
-<script type="text/javascript">
+<!-- <script type="text/javascript">
 	$(function() {
 		//$("#formimg").hide();
 		$("#upload").change(function (event) {
@@ -283,13 +302,13 @@ $(function() {
 		})
 	
 	});
-</script>
+</script> -->
 
 		<div class="clearfix"></div>
 		<p>Documents to submit</p>
 		<div class="col-md-4 form-group">
 			<label for="sel1">Select list:</label> 
-			<select class="form-control" id="document">
+			<select class="form-control docs" id="document" readonly="true">
 				<option value="">select</option>
 				<option value="pan">pan card</option>
 				<option value="aadhar">aadhar card</option>
@@ -297,10 +316,44 @@ $(function() {
 			</select>
 		</div>
 
+		<c:if test="${member.getPan() != null}">
 		<div class="col-md-4 form-group docs">
-			<label >enter number</label>
-			<form:input type="text" class="form-control" id="docs" path=""/>
+			<label >pannumber</label>
+			<form:input type="text" class="form-control" id="docs" path="pan"/>
 		</div>
+		<script>
+		
+			$(function() {
+				$(".docs option[value='pan']").attr("selected","selected");
+			})
+		</script>
+		</c:if>
+		
+		<c:if test="${member.getAadhar() != null}">
+		<div class="col-md-4 form-group docs">
+			<label >Aadhar NUmber</label>
+			<form:input type="text" class="form-control" id="docs" path="aadhar"/>
+		</div>
+		<script>
+		
+			$(function() {
+				$(".docs option[value='aadhar']").attr("selected","selected");
+			})
+		</script>
+		</c:if>
+		
+		<c:if test="${member.getVoter() != null}">
+		<div class="col-md-4 form-group docs">
+			<label >Voter number</label>
+			<form:input type="text" class="form-control" id="docs" path="voter"/>
+		</div>
+		<script>
+		
+			$(function() {
+				$(".docs option[value='voter']").attr("selected","selected");
+			})
+		</script>
+		</c:if>
 		
 		<div class="clearfix"></div>
 		
@@ -308,13 +361,50 @@ $(function() {
 		<p> payment details</p>
 		<div class="col-md-4 form-group">
 			<label for="sel1">mode of payment</label> 
-			<select class="form-control" id="document" path="payment.mop">
+			<select class="form-control mop" id="document"  path="payment.mop">
 				<option value="">select</option>
-				<option value="check">pan card</option>
-				<option value="cash">aadhar card</option>
-				<option value="dd">voter card</option>
+				<option value="check">check</option>
+				<option value="cash">cash</option>
+				<option value="dd">dd</option>
+				<option value="online">online</option>
 			</select>
 		</div>
+		
+		<c:if test="${member.getPayment().getMop() == 'dd'}">
+			<script>
+		
+			$(function() {
+				$(".mop option[value='dd']").attr("selected","selected");
+			})
+		</script>
+		</c:if>
+		
+		
+		<c:if test="${member.getPayment().getMop() == 'online'}">
+			<script>
+		
+			$(function() {
+				$(".mop option[value='online']").attr("selected","selected");
+			})
+		</script>
+		</c:if>
+		
+		<c:if test="${member.getPayment().getMop() == 'check'}">
+			<script>
+		
+			$(function() {
+				$(".mop option[value='check']").attr("selected","selected");
+			})
+		</script>
+		</c:if>
+		<c:if test="${member.getPayment().getMop() == 'cash'}">
+			<script>
+		
+			$(function() {
+				$(".mop option[value='cash']").attr("selected","selected");
+			})
+		</script>
+		</c:if>
 
 		<!-- <div class="row"> -->
 		<div class="col-md-4 form-group">
@@ -346,7 +436,7 @@ $(function() {
 			</div>
 			<label id="terms-error" class="help-block" for="terms" style=""></label>
 		</div>
-<script type="text/javascript">
+<!-- <script type="text/javascript">
 	$(function() {
 		
 		$(".docs").hide();
@@ -379,7 +469,7 @@ $(function() {
 	
 	});
 </script>
-		<div>
+ -->		<div>
 
 			<input type="submit" class="btn btn-primary"
 				style="margin-bottom: 10px" value="Submit"> <input

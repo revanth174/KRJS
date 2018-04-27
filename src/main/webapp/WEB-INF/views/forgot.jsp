@@ -115,7 +115,8 @@ body {
 						
 						memberid : {
 							
-							remote : 'member doesnot exist'
+							remote : 'member doesnot exist',
+							required : 'code sent to mobile'
 						},
 						code : {
 							remote : "doesnot match"
@@ -151,7 +152,7 @@ body {
 		
 		</c:if>
 		
-		<c:if test="${sucess == true}" >
+		<c:if test="${success == true}" >
 			<%@ include file="success.jsp"%>
 		</c:if>
 	</div>

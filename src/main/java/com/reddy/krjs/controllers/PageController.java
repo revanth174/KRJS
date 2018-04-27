@@ -1,11 +1,15 @@
 package com.reddy.krjs.controllers;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -83,8 +87,9 @@ public class PageController {
 		int hourOfDay = calendar.get(Calendar.HOUR_OF_DAY); // 24 hour clock
 		int minute = calendar.get(Calendar.MINUTE);
 		int second = calendar.get(Calendar.SECOND);
-		String appno = "A" + year + month + day + hourOfDay + minute + second;
-		String memid = "M" + year + month + day + hourOfDay + minute + second;
+		int appno = new Random().nextInt(1000000);
+		int memid = new Random().nextInt(1000000);
+		
 		mv.addObject("appno", appno);
 		mv.addObject("memid", memid);
 		if (member != null)
@@ -106,21 +111,30 @@ public class PageController {
 
 	@RequestMapping(value = "/show/category/{id}/members")
 	public ModelAndView showcategoryMembers(@PathVariable("id") String category,
-			@RequestParam(value = "memid", required = false) String catvalue) {
+			@RequestParam(value = "input-search", required = false) String catvalue,
+			@RequestParam(value = "state", required = false) String state,
+			@RequestParam(value = "district", required = false) String district,
+			@RequestParam(value = "taluk", required = false) String taluk) {
+		
 		System.out.println("welcome to pagecontroller->showcategoryMembers()");
-		System.out.println(catvalue);
+		System.out.println(category);
 		List<Member> l = null;
 		ModelAndView mv = new ModelAndView("page");
-		if (catvalue != null) {
+		if (category != null && catvalue!=null) {
 			mv.addObject("entered", category + catvalue);
 			if (category.equals("memberid")) {
+				int id = Integer.parseInt(catvalue);
 				System.out.println("category = memberid");
-				Member mem = service.getById(catvalue);
+				Member mem = service.getById(id);
 				l = new ArrayList<>();
 				l.add(mem);
 
 			} else if (category.equals("taluk")) {
 				System.out.println("category = taluk");
+				
+				System.out.println(state );
+				System.out.println(district );
+				System.out.println(taluk );
 				l = service.getByTaluk(catvalue);
 
 			} else if (category.equals("phone")) {
@@ -175,48 +189,68 @@ public class PageController {
 
 	@RequestMapping(value = "/show/pending/members/{id}/{mid}")
 	ModelAndView memberManipuate(@PathVariable("id") String key, @PathVariable("mid") String memberid,
-			@RequestParam(value = "remarks", required = false) String remarks) throws Exception {
+			@RequestParam(value = "remarks", required = false) String remarks,HttpServletRequest request) throws Exception {
+		int id = Integer.parseInt(memberid);
 		System.out.println("memberManipulate");
 		System.out.println(remarks);
 		System.out.println(key + "   " + memberid);
 		ModelAndView mv = new ModelAndView("redirect:/show/pending/all/members");
 		if (key.equals("delete")) {
-			MemberDup member = service.getById_registeredMember(memberid);
+			MemberDup member = service.getById_registeredMember(id);
 			member.setDeleted(true);
 			member.setRemarks(remarks);
 			service.update(member);
 		} else if (key.equals("view")) {
 
 		} else if (key.equals("approve")) {
-			MemberDup member = service.getById_registeredMember(memberid);
+			MemberDup member = service.getById_registeredMember(id);
 			System.out.println(member.getMemberId());
-			Users u = new Users();
+			
+			/*Users u = new Users();
 			u.setMemberId(member.getMemberId());
 			u.setEnable(true);
 			u.setRole("ROLE_USER");
 			Random r = new Random();
 			int password = 7396;
 			u.setPassword(passwordEncoder.encode(Integer.toString(password)));
-
+*/
+			File f1 = null;
+			File f2 = null;
+			BufferedImage image = null;
+			
+			 f1 = new File(request.getSession().getServletContext().getRealPath("assets/images/"+ member.getMemberId()+".jpg"));
+			 image = new BufferedImage(100,100,BufferedImage.TYPE_INT_ARGB);
+			 image = ImageIO.read(f1);
+			 System.out.println("reading compleer");
 			try {
-				service.insertAndDelete(member);
-				service.insert(u);
+				int gid = service.insertAndDelete(member);
+				
+				 f2 = new File(request.getSession().getServletContext().getRealPath("assets/images/"+gid+".jpg"));
+				 ImageIO.write(image, "jpg", f2);
+				 System.out.println("writing commplere");
+				 
+				
+				/*ServletContext servletContext = request.getServletContext();
+				Resource r =(Resource) new ServletContextResource(servletContext, "/WEB-INF/images/image-example.jpg");
+				Image image=Image.getInstance("/resources/images/102.png");
+				*/
+				Thread d = new Thread(() -> new Email().sendMain(member.getDetails().getGmail()));
+				d.start();
+				new Thread(() -> {
+					try {
+						new BulkSms().send(gid, member.getDetails().getPhone());
+					} catch (Exception e) {
+						
+						e.printStackTrace();
+					}
+				}).start();
+				//service.insert(u);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 
-			Thread d = new Thread(() -> new Email().sendMain(member.getDetails().getGmail()));
-			d.start();
-			// new Email().sendMain(member.getDetails().getGmail());
-			new Thread(() -> {
-				try {
-					new BulkSms().send(member.getMemberId(), member.getDetails().getPhone());
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}).start();
-
+			
+			
 		}
 		return mv;
 
@@ -239,14 +273,18 @@ public class PageController {
 	
 
 	@RequestMapping("/login/forgot")
-	public ModelAndView forgot(@RequestParam(name = "memberid",required = false) String id,
+	public ModelAndView forgot(@RequestParam(name = "memberid",required = false) String mid,
 			@RequestParam(name = "newpassword", required = false) String newpassword) {
+		
 		ModelAndView mv = new ModelAndView("forgot");
 		
 		mv.addObject("title","forgot");
-		if(id == null)
+		if(mid == null) {
+			//int id = Integer.parseInt(mid);
 			mv.addObject("forgotpassword",true);
+		}
 		else {
+			int id = Integer.parseInt(mid);
 			service.changeUserPassword(newpassword, id);
 			mv.addObject("success", "true");
 			mv.addObject("newpasswordchanged",true);
@@ -259,13 +297,15 @@ public class PageController {
 	public String sendcode(@RequestParam("name") String memberid) {
 
 		System.out.println("sendcode");
-		Member m = service.checkMemberId(memberid);
+		int id = Integer.parseInt(memberid);
+		Member m = service.checkMemberId(id);
 		if(m == null)
 			return "false";
 		else {
 			String code = Integer.toString(new Random().nextInt(1000000));
+			System.out.println("sent code");
 			try {
-				memberdao.insert_code(code, memberid);
+				memberdao.insert_code(code, id);
 				new Thread(() -> {
 					try {
 						new BulkSms().sendForgotCode(memberid, m.getDetails().getPhone(), code);
@@ -287,13 +327,15 @@ public class PageController {
 	
 	@RequestMapping("/checkcode")
 	@ResponseBody
-	public String checkcode(@RequestParam("name") String id,
+	public String checkcode(@RequestParam("name") String mid,
 			@RequestParam(name = "enteredcode", required = false) String enteredcode) {
 
 		System.out.println("checkcode");
 		Boolean check= false;
-		if(id!= null && enteredcode != null) 
+		if(mid!= null && enteredcode != null) {
+			 int id = Integer.parseInt(mid);
 			check = memberdao.checkCode(enteredcode, id);
+		}
 
 		
 		
@@ -354,6 +396,52 @@ public class PageController {
 		service.addWard(ward);
 		
 		return "redirect:/ward";
+	}
+	
+	
+	@RequestMapping("/committeeMembers")
+	public ModelAndView commitee() {
+		System.out.println("welcome to pagecontroller->commiteeMember()");
+		ModelAndView mv = new ModelAndView("commitemembers");
+		mv.addObject("title", "commiteeMembers");
+		List<Integer> ids = service.getAdmins();
+		System.out.println("coame");
+		HashMap<Integer,String> hash = new HashMap<>();
+		HashMap<Integer,String> hashTemp = new HashMap<>();
+		for(Integer id : ids ) {
+			hashTemp = service.getIdAndName(id);
+			hash.put(id,hashTemp.get(id));
+		}
+		
+		mv.addObject("members",hash);
+		mv.addObject("userclickcommitteemembers",true);
+		mv.addObject("title","committeemembers");
+		return mv;
+	}
+	
+	@RequestMapping("/committeeMembers/add")
+	public String addCommitteeMember(@RequestParam("id") String id) {
+		System.out.println("welcome to pagecontroller->addCommiteeMember()");
+		
+		int mid = Integer.parseInt(id);
+		Users user = new Users();
+		user.setMemberId(mid);
+		user.setEnable(true);
+		user.setPassword(new BCryptPasswordEncoder().encode("7396"));
+		user.setRole("ROLE_ADMIN");
+		
+			service.insert(user);
+			/*new Thread(() -> {
+				try {
+					new BulkSms().send(user.getMemberId(), member.getDetails().getPhone());
+				} catch (Exception e) {
+					
+					e.printStackTrace();
+				}
+			}).start();*/
+		
+		
+			return "redirect:/committeeMembers";
 	}
 
 }

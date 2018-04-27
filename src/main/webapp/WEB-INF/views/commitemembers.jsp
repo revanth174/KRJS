@@ -63,23 +63,25 @@ body {
 <body>
 	<div id="wrap">
 		<%@ include file="./shared/navbar.jsp"%>
-
+		
  
 		<div class="container">
+		<h2> list of committee members</h2>
 			<div class="col-md-8">
 				<table class="table">
 					<thead>
 						<tr>
-							<th>wardName</th>
-							<th>WardNumber</th>
+							<th>MemberId</th>
+							<th>Name</th>
 
 						</tr>
 					</thead>
 					<tbody>
-						<c:forEach var="ward" items="${wards }">
+						<c:forEach var="member" items="${members}">
 							<tr>
-								<th>${ward.getWardName() }</th>
-								<td>${ward.getWardNumber() }</td>
+								
+								<td>${member.getKey() }</td>
+								<td>${member.getValue() }</td>
 
 							</tr>
 						</c:forEach>
@@ -90,20 +92,20 @@ body {
 		
 
 		
-		<div class="col-md-8">
-			<form:form action="${contextRoot }/ward/add" modelAttribute="ward">
+		 <div class="col-md-8">
+			<form action="${contextRoot }/committeeMembers/add" >
 				<div class="form-group">
-					<label for="exampleInputEmail1">Email WardName</label> <form:input
-						type="text" class="form-control" path="wardName" id="exampleInputEmail1" />
+					<label for="exampleInputEmail1">enter memberid to promote as committee member</label> <input
+						type="text" class="form-control" name="id" id="id" />
 				</div>
-				<div class="form-group">
-					<label for="exampleInputPassword1">Enter WardNumber</label> <form:input
-						type="text" class="form-control" path="wardNumber" id="exampleInputPassword1" />
-				</div>
+				<%-- <div class="form-group">
+					<label for="exampleInputPassword1">Enter WardNumber</label> <input
+						type="text" class="form-control" n="wardNumber" id="exampleInputPassword1" />
+				</div> --%>
 
-				<button type="submit" class="btn btn-primary">Submit</button>
-			</form:form>
-		</div>
+				<button type="submit" class="btn btn-primary">promote</button>
+			</form>
+		</div> 
 	</div>
 	</div>
 	<%@ include file="./shared/footer.jsp"%>

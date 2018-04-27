@@ -46,8 +46,8 @@ $(document).ready(function() {
 
 					</div>
 					<div class="modal-footer">
-						<a href="${contextRoot }/updatemember/ ${member.getMemberId() }">click here to change details</a>
-						<button type="button" class="btn btn-default" data-dismiss="modal">submit</button>
+						<a href="${contextRoot }/updatemember/${member.getMemberId() }">click here to change details</a>
+						<button type="button" class="btn btn-default" data-dismiss="modal">cancel</button>
 
 					</div>
 

@@ -100,7 +100,7 @@ body {
 							<div class="panel-title">Sign In</div>
 							<div
 								style="float: right; font-size: 80%; position: relative; top: -10px">
-								<a href="${contextRoot }/login/forgot">Forgot password?</a>
+								<a href="${contextRoot }/login/forgot">Forgot password</a>
 							</div>
 						</div>
 

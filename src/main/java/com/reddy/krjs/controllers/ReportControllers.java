@@ -95,14 +95,14 @@ public class ReportControllers {
 	@RequestMapping(value= {"/report/idcardgen"})
 	public ModelAndView idcardgen(HttpServletRequest request) {
 		ModelAndView mv = new ModelAndView("page");
-		Set<String> ids = (Set<String>) request.getSession().getAttribute("validlistsession");
+		Set<Integer> ids = (Set<Integer>) request.getSession().getAttribute("validlistsession");
 		Enumeration<String> e = request.getSession().getAttributeNames();
 		while(e.hasMoreElements()) {
 			System.out.println(e.nextElement());
 			
 		}
 		Set<Member> li = new HashSet<>();
-		for(String id : ids) {
+		for(Integer id : ids) {
 			Member m = service.getById(id);
 			li.add(m);
 		}
@@ -159,20 +159,26 @@ public class ReportControllers {
 		
 		System.out.println(idlist);
 		String[] ids = idlist.split(",");
-		Set<String> valid = new LinkedHashSet<>();
-		Set<String> notvalid = new LinkedHashSet<>();
+		Set<Integer> valid = new LinkedHashSet<>();
+		Set<Integer> notvalid = new LinkedHashSet<>();
+		
 		//FormController form = new FormController();
 		for(String s : ids) {
-			if(service.checkMemberId(s) != null)
-				valid.add(s);
+			int id = Integer.parseInt(s);
+			if(service.checkMemberId(id) != null)
+				valid.add(id);
 			else
-				notvalid.add(s);
+				notvalid.add(id);
 		}
 		request.getSession().setAttribute("validlistsession", valid);;
 		Arrays.stream(ids).forEach(x -> System.out.println(x));
 		
 		ModelAndView mv = new ModelAndView("page");
 		mv.addObject("idcard",true);
+		if(valid.isEmpty())
+			valid = null;
+		if(notvalid.isEmpty())
+			notvalid = null;
 		mv.addObject("validlist", valid);
 		mv.addObject("notvalidlist",notvalid);
 		return mv;

@@ -8,13 +8,14 @@
       
       <li><a  class="btn" href="${contextRoot }/form">Application form</a></li>
       <li><a class="btn" href="${contextRoot }/ward/">ward</a></li>
-       <li><a class="btn" href="${contextRoot }/contact">contact us</a></li>
+       
        
         <li><a class="btn" href="${contextRoot }/show/all/members">view Members</a></li>
         <li><a class="btn" href="${contextRoot }/show/pending/all/members">Pending members</a></li>
         <li><a class="btn" href="${contextRoot }/report/">Report Generation</a></li>
         <li><a class="btn" href="${contextRoot }/show/deleted/all/members">Deleted Members</a></li>
-        <li><a class="btn" href="${contextRoot }/update/">update</a></li>
+        <li><a class="btn" href="${contextRoot }/update">update</a></li>
+        <li><a class="btn" href="${contextRoot }/committeeMembers">CommitteMember</a></li>
 		
     </ul>
     <ul class="nav navbar-nav navbar-right">

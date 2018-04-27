@@ -25,7 +25,7 @@
 		<thead>
 			<tr>
 				<th>photo</th>
-				<th>memberId</th>
+				<th >memberId</th>
 				<th>application Number</th>
 				<th>name</th>
 				<th>father's name</th>
@@ -37,17 +37,17 @@
 		</thead>
 		<tbody>
 			<c:forEach var="mem" items="${memberobject }">
-				<tr>
+				<tr style="text-align: center">
 					<td>
 					<img src="<c:url value="/resources/images/${mem.getMemberId()}.jpg" />"
 						alt="no image" height="100" width="100" /></td>
-					<td>${mem.getMemberId()}</td>
+					<td >${mem.getMemberId()}</td>
 					<td>${mem.getAppNo()}</td>
 					<td>${mem.getName()}</td>
 					<td>${mem.getFhname()}</td>
 					<td>${mem.getAddress().getState()}</td>
 					
-					<td><a href=# id="${mem.getProposerMemberId() }">${mem.getProposerMemberId() }</a></td>
+					<td ><a href=# id="${mem.getProposerMemberId() }">${mem.getProposerMemberId() }</a></td>
 					<td>${mem.getDob()}</td>
  
 					<td><a data-toggle="modal"

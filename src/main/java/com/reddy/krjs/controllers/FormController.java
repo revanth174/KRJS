@@ -98,7 +98,8 @@ public class FormController {
 	@RequestMapping(value = {"/show/details/{id}"})
 	public ModelAndView  showMember(@PathVariable("id") String mid) {
 		System.out.println("form controller-> showMember");
-		Member m = service.getById(mid);
+		int id = Integer.parseInt(mid);
+		Member m = service.getById(id);
 		ModelAndView mv = new ModelAndView("form");
 		mv.addObject("member", m);
 		return mv;
@@ -109,22 +110,35 @@ public class FormController {
 	public String check(@RequestParam("name") String memberid) {
 		
 		System.out.println("check");
-		Boolean valid = service.checkMemberId(memberid) != null;
+		int id = Integer.parseInt(memberid);
+		Boolean valid = service.checkMemberId(id) != null;
+		return valid.toString();
+	}
+	
+	@RequestMapping("/gettags")
+	@ResponseBody
+	public String tags(@RequestParam("name") String memberid) {
+		
+		System.out.println("check");
+		int id = Integer.parseInt(memberid);
+		Boolean valid = service.checkMemberId(id) != null;
 		return valid.toString();
 	}
 	
 	@RequestMapping("/memberref")
 	@ResponseBody
-	public String checkRef(@RequestParam("name") String memberid) {
+	public String checkRef(@RequestParam("ref") String refno) {
 		
 		System.out.println("check");
-		Boolean valid = service.checkMemberId(memberid) != null;
-		return valid.toString();
+		
+	
+		return Boolean.toString(service.checkRefNo(refno));
 	}
 	
 	@RequestMapping("/pid")
 	public @ResponseBody String getShopInJSON(@RequestParam("id") String memberid) {
-		Member m = service.getById(memberid);
+		int id = Integer.parseInt(memberid);
+		Member m = service.getById(id);
 		System.out.println("json");
 		Mem mem = new Mem();
 		mem.setName(m.getName());
@@ -136,12 +150,14 @@ public class FormController {
 
 	@RequestMapping(value= {"/update"})
 	public ModelAndView update(@RequestParam(value="id",required= false) String memberid) {
+		
 		ModelAndView mv = new ModelAndView("page");
 		mv.addObject("title","update");
 		
 		System.out.println(memberid);
 		if(memberid != null) {
-			Member mem = service.getById(memberid);
+			int id = Integer.parseInt(memberid);
+			Member mem = service.getById(id);
 			if(mem == null) {
 				mv.addObject("nomember",true);
 			} else {
@@ -159,15 +175,22 @@ public class FormController {
 
 	@RequestMapping(value= {"/updatemember/{id}"})
 	public ModelAndView updatemember(@PathVariable("id") String memberid) {
+		int id = Integer.parseInt(memberid);
 		ModelAndView mv = new ModelAndView("page");
 		mv.addObject("clickupdateform", true);
 		mv.addObject("update",true);
 		mv.addObject("title","updateform");
-		memberid = memberid.trim();
 		
-		Member mem = service.getById(memberid);
+		
+		Member mem = service.getById(id);
 		if(mem!=null)  {
 			System.out.println(mem.getMemberId());
+			if(mem.getAadhar() != null)
+				mv.addObject("aadhar",true);
+			else if (mem.getPan() != null)
+				mv.addObject("pan",true);
+			else
+				mv.addObject("voter",true);
 			mv.addObject("member", mem);
 			mv.addObject("memid",mem.getMemberId());
 		}
@@ -248,6 +271,8 @@ public class FormController {
 			
 			service.update(m);
 			mv.addObject("updated",true);
+			mv.addObject("success",true);
+			
 		}
 		return mv;
 
@@ -272,6 +297,17 @@ public class FormController {
 		}
 	}
 
+	class Tag {
+		String name;
+
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+	}
 	
 	
 	

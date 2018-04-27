@@ -10,10 +10,25 @@
 
 		}
 	}
+	
+	$.validator.addMethod("accept",function(value,element) {
+		return  /^[0-9 ,]*[0-9]$/.test(value);
+	},'it should contains digits only and must not end with comma')
+
 
 	$(function() {
 
 		$('[data-toggle="tooltip"]').tooltip(); 
+		
+		$("#memberlist").validate({
+			rules : {
+				idlist : {
+					required : true,
+					accept : true
+					
+				}
+			}
+		})
 
 	});
 </script>
@@ -21,7 +36,7 @@
 <form id="memberlist" method="post" class="form-horizontal"
 	action="${contextRoot }/report/memberlist">
 	<div class="form-group">
-		<label class="col-xs-3 control-label">list</label>
+		<label class="col-xs-3 control-label">Enter MemberId's List</label>
 		<div class="col-xs-4">
 			<textarea id="idlist" type="text" class="form-control" name="idlist"
 				placeholder="Shop Address" style="height: 100px" maxlength="200"></textarea>
@@ -31,13 +46,13 @@
 	<div class="form-group">
 		<div class="col-xs-9 col-xs-offset-3">
 			<input type="submit" name="add" class="btn btn-primary"
-				value="Add Shop">
+				value="submit">
 			<button type="reset" class="btn btn-default">Reset</button>
 		</div>
 	</div>
 </form>
 </div>
-${validlist }
+
 <div class="container">
 
 <c:if test="${validlist != null }">

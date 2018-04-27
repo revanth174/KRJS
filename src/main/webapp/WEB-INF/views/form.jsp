@@ -31,7 +31,7 @@
 			<label for="sel1">Select list (select one):</label>
 			<form:select class="form-control" id="sel1" name="register_title"
 				path="title">
-				<form:option value="Mr"><%= a %></form:option>
+				<form:option value="Mr">Mr</form:option>
 				<form:option value="Mrs">Mrs</form:option>
 				<form:option value="Miss">Miss</form:option>
 				<form:option value="Dr">Dr.</form:option>
@@ -147,10 +147,11 @@
 		<!-- <div class="row"> -->
 		<div class="col-md-6 form-group">
 			<label>Marital status</label>
-			<form:select class="form-control" id="sel1"
-				path="details.maritalStatus" name="register_marital">
+			<form:select class="form-control" id="marital"
+				path="details.maritalStatus" name="register_marital ">
+				
 				<option value="yes">yes</option>
-				<option value="No">No</option>
+				<option value="No" selected>No</option>
 
 			</form:select>
 		</div>
@@ -158,11 +159,29 @@
 		<div class="col-md-6 form-group">
 			<label>No Of children</label>
 			<form:input type="text" class="form-control" path="details.noc"
-				name="register_noc" />
+				name="register_noc" id="noc"/>
 		</div>
 		<!-- </div> -->
 
-
+<script type="text/javascript">
+	$(function() {
+		$("#noc").attr("readonly","true");
+		$("#marital").change(function (event) {
+			$val = $(this).val();
+			
+			if($val == "yes"){
+				alert($val);
+				$("#noc").removeAttr("readonly");
+			}
+			else{
+				$("#noc").attr("readonly","true");
+			}
+				
+				
+		})
+	
+	});
+</script>
 		<p>Communication Address</p>
 		<!-- <div class="row"> -->
 		<div class="col-md-4 form-group">
@@ -179,14 +198,7 @@
 
 		</div>
 
-		<div class="col-md-4 form-group">
-			<label>Town/Taluk</label>
-			<form:select class="form-control" path="address.taluk"
-				id="register_taluk" >
-				<form:option value="select"> select</form:option>
-			</form:select>
-		</div>
-
+		
 		<!-- </div> -->
 
 		<!-- <div class="row"> -->
@@ -207,9 +219,18 @@
 			<label>Disrict</label>
 			<form:select class="form-control" path="address.district" id="register_district"
 				 >
-				<form:option value="select"> select </form:option>
+				
 			</form:select>
 		</div>
+		
+		<div class="col-md-4 form-group">
+			<label>Town/Taluk</label>
+			<form:select class="form-control" path="address.taluk"
+				id="register_taluk" >
+				<form:option value="select"> select</form:option>
+			</form:select>
+		</div>
+		
 <script type="text/javascript">
 
 var kar = ["Bagalkot","Belagavi","Bellary","Bengaluru Urban","Bengaluru Rural","Bidar","Bijapura","Chamarajanagar","Chikballapur",
@@ -244,19 +265,20 @@ kt["Dharwad"] = "Kalghatgi|Dharwada|Hubballi (Rural)|Hubballi (Urban)|Kundgol|Na
 kt["Gadag"] = "Gadaga-Betigeri|Nargunda|Mundargi|Ron|Shirahatti";
 kt["Gulbarga"] = "Gulbarga|Afzalpura|Alanda|Chincholi|Chitapura|Jevargi|Sedam|Shahabad";
 kt["Haveri"] = "Ranibennur|Byadgi|Hangal|Haveri|Savanur|Hirekeruru|Shiggaon";
+kt["Hassan"] ="Alur|Arkalgud|Arsikere|Belur|Channarayapatna|Hassan|Hole Narasipur|Sakleshpur"
 kt["Kolar"] = "Hassan|Arsikere|Channarayapattana|Holenarsipura|Sakleshpura|Alur|Arkalgudu|Belur";
 
 	$(function() {
 		$state = $("#register_state");
 		$dis = $('#register_district');
-		$options = "<option>select district</option>";
+		
 		var i;
 		$state.change(function() {
-			alert($(this).val());
+			//alert($(this).val());
 			if($(this).val() == "karnataka") {
-				alert($(this).val());
+				//alert($(this).val());
 				
-				
+				$options ="<option>select district</option>"
 				for (i = 0; i < kar.length; i++) { 
 				    
 					$options += "<option value='"+kar[i] +"'>"+kar[i]+"</option>";
@@ -264,9 +286,9 @@ kt["Kolar"] = "Hassan|Arsikere|Channarayapattana|Holenarsipura|Sakleshpura|Alur|
 				}
 				$('select#register_district').html($options);
 			} else if($(this).val() == "andhra pradesh") {
-				alert($(this).val());
+				//alert($(this).val());
 				
-				
+				$options ="<option>select district</option>"
 				for (i = 0; i < ap.length; i++) { 
 				    
 					$options += "<option value='"+ap[i] +"'>"+ap[i]+"</option>";
@@ -274,8 +296,8 @@ kt["Kolar"] = "Hassan|Arsikere|Channarayapattana|Holenarsipura|Sakleshpura|Alur|
 				}
 				$('select#register_district').html($options);
 			} else if($(this).val() == "tamilnadu") {
-				alert($(this).val());
-				
+				//alert($(this).val());
+				$options ="<option>select district</option>"
 				for (i = 0; i < tn.length; i++) { 
 				    
 					$options += "<option value='"+tn[i] +"'>"+tn[i]+"</option>";
@@ -283,24 +305,24 @@ kt["Kolar"] = "Hassan|Arsikere|Channarayapattana|Holenarsipura|Sakleshpura|Alur|
 				}
 				$('select#register_district').html($options);
 			} else if($(this).val() == "telangana") {
-				alert($(this).val());
-				
+				//alert($(this).val());
+				$options ="<option>select district</option>"
 				for (i = 0; i < ts.length; i++) { 
 				    
 					$options += "<option value='"+ts[i] +"'>"+ts[i]+"</option>";
 					
 				}
-				$('select#register_district').append($options);
+				$('select#register_district').html($options);
 			}
 			
 		});
 		$dis.change(function() {
 			var dis = $(this).val();
-			alert(dis);
+			//alert(dis);
 			var talukString = kt[dis];
 			var taluks = talukString.split("|");
-			alert(taluks);
-			alert(taluks[0]);
+			//alert(taluks);
+			//alert(taluks[0]);
 			$talukOptions = "<option>select taluk</option>";
 			var i;
 			for(i=0;i<taluks.length;i++) {
@@ -324,12 +346,16 @@ kt["Kolar"] = "Hassan|Arsikere|Channarayapattana|Holenarsipura|Sakleshpura|Alur|
 
 		
 		<div class=" col-md-6 form-group">
-			<label for="sel1">Select list (select one):</label>
+			<label for="sel1">ward Name</label>
 			<form:select class="form-control" id="sel1" name="register_ward"
 				path="details.ward">
-				<c:forEach var="ward" items="${wards }">
+				<%-- <c:forEach var="ward" items="${wards }">
 					<form:option value="${ward.getWardName()}">${ward.getWardName()}</form:option>
-				</c:forEach>
+				</c:forEach> --%>
+				<form:option value="one">one</form:option>
+				<form:option value="two">two</form:option>
+				<form:option value="three">three</form:option>
+				
 			</form:select>
 
 		</div>
@@ -398,6 +424,10 @@ $(function() {
 				</div>
 			</div>
 		</div>
+		
+		<c:if test ="${member.getMemberId() !=0 }">
+			
+		</c:if>
 
 <script type="text/javascript">
 	$(function() {
@@ -442,9 +472,9 @@ $(function() {
 			<label for="sel1">mode of payment</label> 
 			<select class="form-control" id="document" path="payment.mop">
 				<option value="">select</option>
-				<option value="check">pan card</option>
-				<option value="cash">aadhar card</option>
-				<option value="dd">voter card</option>
+				<option value="check">check</option>
+				<option value="cash">cash</option>
+				<option value="dd">DD</option>
 			</select>
 		</div>
 

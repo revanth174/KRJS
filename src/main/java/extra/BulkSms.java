@@ -34,7 +34,7 @@ public class BulkSms {
 	
 	public static void main(String args[]) throws Exception {
 		BulkSms s = new BulkSms();
-		s.send("aparna", "9686885080");
+		s.send(123, "7396880443");
 	}
 
 	/*	
@@ -46,7 +46,7 @@ public class BulkSms {
 	6	Write to the output stream. 
 	7	Close the output stream.
 	*/
-	public void send(String memid,String phone) throws Exception{
+	public void send(int memid,String phone) throws Exception{
 		String postData="";
 		String retval = "";
 
