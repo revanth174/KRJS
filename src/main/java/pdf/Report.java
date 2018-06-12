@@ -109,6 +109,7 @@ public class Report {
 		    	System.out.println("hello welcome ");
 		Iterator<Member> list = p.iterator();
 		int count = 0;
+		int number = 0;
 		while(list.hasNext()) {
 			Member m = list.next();
 			System.out.println(m.getMemberId());
@@ -226,11 +227,17 @@ public class Report {
 	
 	     
 	
+			number++;
+			
 	
 			table1.addCell(cell1);
 	     
 	
+			
+			
 			document.add(table1);
+			if(number %21 ==0) 
+				document.newPage();
 		}
 		
 			 document.close();
@@ -323,7 +330,14 @@ public class Report {
 	                nesttable.addCell(cellcontent);
 
 
-	                Image image = Image.getInstance(path+"/images/"+m.getMemberId()+".jpg");
+	                Image image = null;
+	    			try {
+	    				image = Image.getInstance(path+"/images/"+m.getMemberId()+".jpg");
+	    			} catch(FileNotFoundException e) {
+	    				image = Image.getInstance(path+"/images/"+"nophoto"+".png");
+	    			}
+	    			
+	                
 	                PdfPCell cell22 = new PdfPCell(image);
 	                cell22.setPaddingTop(3);
 	                cell22.setPaddingRight(2);

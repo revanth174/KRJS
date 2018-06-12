@@ -1,7 +1,6 @@
 package com.reddy.krjs.controllers;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -9,7 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
-import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -35,6 +33,7 @@ import com.reddy.krjs.supportEnd.service.MemberService;
 
 import extra.BulkSms;
 import extra.Email;
+import extra.FileUploadUtility;
 
 @Controller
 public class PageController {
@@ -75,7 +74,7 @@ public class PageController {
 	}
 
 	@RequestMapping("/form")
-	public ModelAndView form(@RequestParam(value = "member", required = false) Member member) {
+	public ModelAndView form(@RequestParam(value = "member", required = false) Member member,HttpServletRequest request) {
 		System.out.println("welcome to pagecontroller->form()");
 		ModelAndView mv = new ModelAndView("page");
 		mv.addObject("title", "Application form");
@@ -89,7 +88,8 @@ public class PageController {
 		int second = calendar.get(Calendar.SECOND);
 		int appno = new Random().nextInt(1000000);
 		int memid = new Random().nextInt(1000000);
-		
+		System.out.println(request.getSession().getServletContext());
+		//System.out.println(pathCheck);
 		mv.addObject("appno", appno);
 		mv.addObject("memid", memid);
 		if (member != null)
@@ -105,6 +105,8 @@ public class PageController {
 		System.out.println("welcome to pagecontroller->showAllMember()");
 		ModelAndView mv = new ModelAndView("page");
 		mv.addObject("title", "All members");
+		mv.addObject("totalCount",service.countAllMembers());
+		mv.addObject("recentList",service.recentMembersList());
 		mv.addObject("userclickallmembers", true);
 		return mv;
 	}
@@ -120,36 +122,42 @@ public class PageController {
 		System.out.println(category);
 		List<Member> l = null;
 		ModelAndView mv = new ModelAndView("page");
-		if (category != null && catvalue!=null) {
+		if (category != null ) {
 			mv.addObject("entered", category + catvalue);
-			if (category.equals("memberid")) {
+			if (category.equals("memberid") && catvalue!=null) {
 				int id = Integer.parseInt(catvalue);
 				System.out.println("category = memberid");
 				Member mem = service.getById(id);
+				System.out.println(mem);
+				if(mem != null)
 				l = new ArrayList<>();
 				l.add(mem);
 
-			} else if (category.equals("taluk")) {
+			} else if (category.equals("taluk") && state != null && state != "" && district != null && taluk != null) {
 				System.out.println("category = taluk");
 				
 				System.out.println(state );
 				System.out.println(district );
 				System.out.println(taluk );
-				l = service.getByTaluk(catvalue);
+				l = service.getBySDT(state, district, taluk);
 
-			} else if (category.equals("phone")) {
+						
+			} else if (category.equals("phone") && catvalue!=null && catvalue!="") {
 
 				l = service.getByMobileNumber(catvalue);
 
-			} else if (category.equals("district")) {
-				l = service.getByDistrict((catvalue));
-
-			} else if (category.equals("pincode")) {
+			} else if (category.equals("district") && state != null && district != null) {
+				l = service.getBySD(state, district);
+			} else if (category.equals("pincode") ) {
 				l = service.getByPincode(catvalue);
 
-			} else if (category.equals("state")) {
-				l = service.getByState(catvalue);
+			} else if (category.equals("state") && state!=null) {
+				l = service.getByState(state);
 
+				System.out.println(l.size());
+			} else if(category.equals("applicationNumber") && catvalue != null) {
+				int appNo = Integer.parseInt(catvalue);
+				l = service.getByApplicationNumber(appNo);
 			}
 		}
 		mv.addObject("memberobject", l);
@@ -204,7 +212,7 @@ public class PageController {
 
 		} else if (key.equals("approve")) {
 			MemberDup member = service.getById_registeredMember(id);
-			System.out.println(member.getMemberId());
+			//System.out.println(member.getMemberId());
 			
 			/*Users u = new Users();
 			u.setMemberId(member.getMemberId());
@@ -214,13 +222,19 @@ public class PageController {
 			int password = 7396;
 			u.setPassword(passwordEncoder.encode(Integer.toString(password)));
 */
-			File f1 = null;
+			/*File f1 = null;
 			File f2 = null;
 			BufferedImage image = null;
-			
+			try {
 			 f1 = new File(request.getSession().getServletContext().getRealPath("assets/images/"+ member.getMemberId()+".jpg"));
 			 image = new BufferedImage(100,100,BufferedImage.TYPE_INT_ARGB);
 			 image = ImageIO.read(f1);
+			} catch (javax.imageio.IIOException e) {
+				f1 = new File(request.getSession().getServletContext().getRealPath("assets/images/"+ "584"+".jpg"));
+				System.out.println(f1);
+				 image = new BufferedImage(100,100,BufferedImage.TYPE_INT_ARGB);
+				 image = ImageIO.read(f1);
+			}
 			 System.out.println("reading compleer");
 			try {
 				int gid = service.insertAndDelete(member);
@@ -230,10 +244,32 @@ public class PageController {
 				 System.out.println("writing commplere");
 				 
 				
-				/*ServletContext servletContext = request.getServletContext();
+				ServletContext servletContext = request.getServletContext();
 				Resource r =(Resource) new ServletContextResource(servletContext, "/WEB-INF/images/image-example.jpg");
 				Image image=Image.getInstance("/resources/images/102.png");
-				*/
+				
+				Thread d = new Thread(() -> new Email().sendMain(member.getDetails().getGmail()));
+				d.start();
+				new Thread(() -> {
+					try {
+						new BulkSms().send(gid, member.getDetails().getPhone());
+					} catch (Exception e) {
+						
+						e.printStackTrace();
+					}
+				}).start();
+				//service.insert(u);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}*/
+			
+			
+			
+			try {
+				
+				BufferedImage image = FileUploadUtility.readFile(member.getMemberId());
+				int gid = service.insertAndDelete(member);
+			     FileUploadUtility.writeFile(image,gid);
 				Thread d = new Thread(() -> new Email().sendMain(member.getDetails().getGmail()));
 				d.start();
 				new Thread(() -> {

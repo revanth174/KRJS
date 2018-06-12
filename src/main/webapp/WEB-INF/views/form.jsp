@@ -267,7 +267,7 @@ kt["Gulbarga"] = "Gulbarga|Afzalpura|Alanda|Chincholi|Chitapura|Jevargi|Sedam|Sh
 kt["Haveri"] = "Ranibennur|Byadgi|Hangal|Haveri|Savanur|Hirekeruru|Shiggaon";
 kt["Hassan"] ="Alur|Arkalgud|Arsikere|Belur|Channarayapatna|Hassan|Hole Narasipur|Sakleshpur"
 kt["Kolar"] = "Hassan|Arsikere|Channarayapattana|Holenarsipura|Sakleshpura|Alur|Arkalgudu|Belur";
-
+kt["Ramanagara"] = "Kanakpura|Ramanagara|channapatna";
 	$(function() {
 		$state = $("#register_state");
 		$dis = $('#register_district');

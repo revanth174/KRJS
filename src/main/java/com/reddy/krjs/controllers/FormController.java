@@ -6,6 +6,8 @@ import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -30,6 +32,7 @@ import com.reddy.krjs.supportEnd.Model.Payment;
 import com.reddy.krjs.supportEnd.Model.PaymentDup;
 import com.reddy.krjs.supportEnd.service.MemberService;
 
+import extra.FileUploadUtility;
 import extra.JsonUtil;
 import extra.Mem;
 
@@ -47,7 +50,7 @@ public class FormController {
 	 }
 	
 	@RequestMapping(value = {"/add"},method = RequestMethod.POST)
-	public ModelAndView add(@RequestParam("register_image") MultipartFile file, @ModelAttribute("member") MemberDup member,BindingResult results) {
+	public ModelAndView add(@RequestParam("register_image") MultipartFile file,HttpServletRequest request , @ModelAttribute("member") MemberDup member,BindingResult results) {
 		System.out.println("welcome to pagecontroller->add()");
 		
 		
@@ -67,10 +70,16 @@ public class FormController {
 		//payment.setMember(member);
 		System.out.println(member);
 		
-		service.insert_registerMember(member);
+		
+		String pathCheck = request.getSession().getServletContext().getRealPath("/resources/assets/images");
 		String path = "F:/First/pro/krjs/src/main/webapp/assets/images/";
 		path = path + member.getMemberId() + ".jpg";
-		File f = new File(path);
+		
+		if(!file.isEmpty()) {
+			FileUploadUtility.uploadFile(request,file,member.getMemberId());
+		}
+		service.insert_registerMember(member);
+		/*File f = new File(path);
 		if (!file.isEmpty()) {
 			try {
 				byte[] bytes = file.getBytes();
@@ -86,7 +95,7 @@ public class FormController {
 
 		} else {
 			System.out.println("File Uploading Problem");
-		}
+		}*/
 
 		ModelAndView mv = new ModelAndView("page");
 		mv.addObject("success",true);

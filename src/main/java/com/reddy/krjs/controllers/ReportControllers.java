@@ -117,6 +117,7 @@ public class ReportControllers {
 			e1.printStackTrace();
 		}
 		mv.addObject("idcard",true);
+		mv.addObject("title","Id");
 		return mv;
 		
 	}
@@ -170,15 +171,21 @@ public class ReportControllers {
 			else
 				notvalid.add(id);
 		}
-		request.getSession().setAttribute("validlistsession", valid);;
+		request.getSession().setAttribute("validlistsession", valid);
 		Arrays.stream(ids).forEach(x -> System.out.println(x));
 		
 		ModelAndView mv = new ModelAndView("page");
+		
+		mv.addObject("title","Id");
 		mv.addObject("idcard",true);
 		if(valid.isEmpty())
 			valid = null;
 		if(notvalid.isEmpty())
 			notvalid = null;
+		if(valid != null)
+			mv.addObject("pdf","pdf");
+		else
+			mv.addObject("pdf",null);
 		mv.addObject("validlist", valid);
 		mv.addObject("notvalidlist",notvalid);
 		return mv;

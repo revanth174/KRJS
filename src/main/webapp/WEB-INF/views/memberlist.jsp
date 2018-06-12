@@ -101,8 +101,12 @@
 		</table>
 	</div>
 </c:if>	
+
+<c:if test="${pdf !=null }">
 <div class="clearfix"></div>
 	<div>
 		<a href="${contextRoot }/report/idcardgen" >click here to generate Id cards</a>
 	</div>
+
+</c:if>
 </div>

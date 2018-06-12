@@ -54,7 +54,7 @@ public class BulkSms {
 		String User ="T2017081401";
 		String passwd = "th6RLkgr";
 		String mobilenumber = phone; 
-		String msg="your ward "+ memid +" is absent for 5th hour on 29.08.2017";
+		String msg="your ward "+ memid +" is absent for 3rd hour on 08.05.2018";
 		String sid = "VEMANA";
 		String mtype = "N";
 				

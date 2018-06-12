@@ -1,5 +1,5 @@
 
-<form action="" id="search-form">
+<form action="${contextRoot }/show/category/${category }/members" id="search-form">
 	<c:choose>
 
 		<c:when test="${category == 'taluk' }">
